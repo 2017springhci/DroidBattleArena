@@ -42,7 +42,7 @@ public class Arena {
         return (ArrayList<Droid>)participants.clone();
     }
     
-    public ArrayList<Integer[]> getBullets() {
+    public ArrayList<Integer[]> getLasers() {
         //Return a list containing all shots fired in the last step
         return laserShots;
     }
