@@ -15,15 +15,21 @@ public class Program implements Serializable{
         commands.add(c);
     }
     
-    public void runProgram() {
+    public ExternalCommand runProgram() {
         //while(true) {
             Stack<Command> callStack = new Stack<>();
             for(int i = commands.size() - 1; i >=0; i--) {
                 callStack.push(commands.get(i));
             }
             while(!callStack.empty()) {
-                callStack.pop().execute(this);
+                Command c = callStack.pop();
+                if(c instanceof ExternalCommand) {
+                    return (ExternalCommand) c;
+                } else {
+                    c.execute(this);
+                }
             }
+            return null;
         //}
     }
     
