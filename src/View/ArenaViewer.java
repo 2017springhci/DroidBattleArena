@@ -7,29 +7,29 @@ package View;
 
 import javax.swing.JPanel;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import Arena.ArenaListener;
 import Arena.Arena;
 import java.util.ArrayList;
 import Arena.Droid;
-import java.awt.ComponentOrientation;
 import java.awt.GridLayout;
 
 /**
  *
  * @author joseph
  */
-public class ArenaViewer extends JPanel implements ActionListener {
+public class ArenaViewer extends JPanel implements ArenaListener {
     
     final private Arena arena;
     final private ArrayList<ArrayList<PixelComponent>> grid;
     private ArrayList<Integer[]> lines;
     
-    public void actionPerformed(ActionEvent e) {
+    @Override
+    public void arenaNotify() {
         ArrayList<Integer[]> moves = arena.getDroidMoves();
         ArrayList<Integer[]> lasers = arena.getLasers();
         for (Integer[] m : moves) {
             grid.get(m[0]).get(m[1]).clear();
-            grid.get(m[2]).get(m[3]).set(m[4]);
+            grid.get(m[2]).get(m[3]).update(m[4]);
         }
         lines = lasers;
     }
@@ -40,6 +40,7 @@ public class ArenaViewer extends JPanel implements ActionListener {
     
     public ArenaViewer (Arena arena) {
         this.arena = arena;
+        arena.addListener(this);
         grid = new ArrayList<ArrayList<PixelComponent>> (arena.getWidth());
         for (int i = 0; i < arena.getHeight(); ++i) {
             grid.add(new ArrayList<PixelComponent> (arena.getHeight()));
@@ -48,9 +49,12 @@ public class ArenaViewer extends JPanel implements ActionListener {
             }
         }
         for (Droid d : arena.getParticipants()) {
-            grid.get(d.getX()).get(d.getY()).update(d.getAlignment());
+            grid.get(d.getPosX()).get(d.getPosY()).update(d.getAlignment());
         }
-        this.setLayout(new GridLayout(arena.getWidth(), arena.getHeight()));
+        GridLayout gl = new GridLayout(arena.getWidth(), arena.getHeight());
+        gl.setHgap(1);
+        gl.setVgap(1);
+        this.setLayout(gl);
         //Grid Layout unfortunately requires me to add a row before adding the next one, making logic
         //a bit clunky. Regardless:
         for (int i = 0; i < arena.getHeight(); ++i) {
@@ -58,6 +62,7 @@ public class ArenaViewer extends JPanel implements ActionListener {
                 this.add(column.get(i));
             }
         }
+       
         
     }
     
