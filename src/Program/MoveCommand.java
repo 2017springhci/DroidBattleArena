@@ -46,4 +46,8 @@ public class MoveCommand extends ExternalCommand {
         }
         return cmd;
     }
+    
+    public MoveEnum getMoveDirection() {
+        return move;
+    }
 }

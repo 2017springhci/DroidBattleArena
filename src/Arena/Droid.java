@@ -1,5 +1,6 @@
 package Arena;
 
+import Program.ExternalCommand;
 import Program.Program;
 
 /**
@@ -21,30 +22,32 @@ public class Droid {
     /**
      * @return the posX
      */
-    protected int getPosX() {
+    public int getPosX() {
         return posX;
     }
 
     /**
      * @param posX the posX to set
      */
-    protected void setPosX(int posX) {
+    public void setPosX(int posX) {
         this.posX = posX;
     }
 
     /**
      * @return the posY
      */
-    protected int getPosY() {
+    public int getPosY() {
         return posY;
     }
 
     /**
      * @param posY the posY to set
      */
-    protected void setPosY(int posY) {
+    public void setPosY(int posY) {
         this.posY = posY;
     }
     
-    
+    protected ExternalCommand executeTurn() {
+        return prog.runProgram();
+    }
 }
