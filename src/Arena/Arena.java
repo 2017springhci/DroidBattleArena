@@ -77,8 +77,19 @@ public class Arena {
     }
     
     public boolean gameOver() {
-        //Is the game over? Start with yes
-        return true;
+        //Is the game over?
+        //If one or fewer droids remain, then yes
+        return (howManyAlive() < 2);
+    }
+    
+    public int howManyAlive() {
+        int count = 0;
+        for(Droid d : participants) {
+            if(d.isAlive()) {
+                count++;
+            }
+        }
+        return count;
     }
     
     private void cleanupTurn() {
@@ -91,6 +102,7 @@ public class Arena {
         do {
             progressTime();
         } while (!gameOver());
+        System.out.println("And it is over!");
     }
     
     public void progressTime() {

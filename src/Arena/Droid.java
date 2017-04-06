@@ -50,4 +50,9 @@ public class Droid {
     protected ExternalCommand executeTurn() {
         return prog.runProgram();
     }
+    
+    public boolean isAlive() {
+        //Death isn't implemented yet
+        return true;
+    }
 }
