@@ -16,17 +16,18 @@ public class PixelComponent extends Component {
     private Color color;
     
     public void clear() {
-        
+        this.color = Color.gray;
     }
     public void update(int droidID) {
-        
+        //putting this succinctly for now, can be made more ugly to be functional later
+        this.color = (droidID == 0) ? Color.BLUE : Color.RED;
     }
     public PixelComponent(Color color) {
         this.color = color;
     }
     
     public PixelComponent() {
-        this.color = 
+        this.color = Color.gray;
     }
     
 }
