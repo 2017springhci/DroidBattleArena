@@ -9,14 +9,18 @@ import Program.Program;
  * 
  */
 public class Droid {
+    private static final int MAX_HEALTH = 1;
+    
     private int posX; //The droid's x coordinate
     private int posY; //The droid's y coordinate
     private Program prog; //The droid's program
+    private int health;
     
     public Droid(int x, int y, Program p) {
         posX = x;
         posY = y;
         prog = p;
+        health = MAX_HEALTH;
     }
 
     /**
@@ -52,7 +56,12 @@ public class Droid {
     }
     
     public boolean isAlive() {
-        //Death isn't implemented yet
-        return true;
+        //It is dead if it has health <= 0
+        return health > 0;
+    }
+    
+    public void processHit() {
+        //We've been shot! Decrease our health
+        health--;
     }
 }

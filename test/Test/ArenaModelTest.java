@@ -10,14 +10,23 @@ import Program.ShootCommand;
 
 public class ArenaModelTest {
     public static void main(String[] args) {
-        Program p = new Program();
-        p.addCommand(new ShootCommand(4, 3));
-        p.addCommand(new MoveCommand(NORTH));
-        p.addCommand(new MoveCommand(EAST));
-        p.printProgram();
+        Program p1 = new Program();
+        p1.addCommand(new ShootCommand(4, 0));
+        p1.addCommand(new ShootCommand(4, 0));
+        p1.addCommand(new ShootCommand(4, 0));
+        p1.printProgram();
+        System.out.println();
+        
+        Program p2 = new Program();
+        p2.addCommand(new MoveCommand(NORTH));
+        p2.addCommand(new MoveCommand(NORTH));
+        p2.addCommand(new MoveCommand(NORTH));
+        p2.printProgram();
+        System.out.println();
+        
         Arena a = new Arena(10, 10);
-        Droid d1 = new Droid(5, 5, p);
-        Droid d2 = new Droid(5, 4, p);
+        Droid d1 = new Droid(5, 5, p1);
+        Droid d2 = new Droid(9, 8, p2);
         a.addParticipant(d1);
         a.addParticipant(d2);
         a.runGame();
