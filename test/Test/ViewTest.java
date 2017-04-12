@@ -10,10 +10,11 @@ import Arena.Droid;
 import Program.MoveCommand;
 import static Program.MoveEnum.EAST;
 import static Program.MoveEnum.NORTH;
+import static Program.MoveEnum.WEST;
 import Program.Program;
-import Program.ShootCommand;
 import View.ArenaViewer;
 import java.awt.Dimension;
+import java.io.File;
 import javax.swing.JFrame;
 
 /**
@@ -22,14 +23,20 @@ import javax.swing.JFrame;
  */
 public class ViewTest {
    public static void main(String[] args) {
-        Program p = new Program();
-        p.addCommand(new ShootCommand(4, 3));
-        p.addCommand(new MoveCommand(NORTH));
-        p.addCommand(new MoveCommand(EAST));
-        p.printProgram();
-        Arena a = new Arena(10, 10);
-        Droid d1 = new Droid(5, 5, p);
-        Droid d2 = new Droid(2, 7, p);
+        Program p1 = Program.loadProgram(new File("BotBot.dba"));
+        p1.printProgram();
+        System.out.println();
+        
+        Program p2 = new Program();
+        p2.addCommand(new MoveCommand(NORTH));
+        p2.addCommand(new MoveCommand(EAST));
+        p2.addCommand(new MoveCommand(WEST));
+        p2.printProgram();
+        System.out.println();
+        
+        Arena a = new Arena(20, 20);
+        Droid d1 = new Droid(5, 5, p1);
+        Droid d2 = new Droid(9, 8, p2);
         a.addParticipant(d1);
         a.addParticipant(d2);
         
