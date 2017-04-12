@@ -47,10 +47,20 @@ public class ArenaViewer extends JPanel implements ArenaListener {
             for (int j = 0; j < arena.getHeight(); ++j) {
                 int cellX = 10 * i + 10;
                 int cellY = 10 * j + 10;
-                System.out.println("At " + i + ", " + j);
+                //System.out.println("At " + i + ", " + j);
                 g.setColor(grid.get(i).get(j).getColor());
                 g.fillRect(cellX, cellY, 10, 10);
             }
+        }
+        //vertical lines
+        for (int i = 0; i <= arena.getWidth(); ++i) {
+            g.setColor(Color.BLACK);
+            g.drawLine(i*10 + 10, 10, i*10 + 10, arena.getHeight()*10+10);
+        }
+        //horizontal lines
+        for (int j = 0; j <= arena.getHeight(); ++j) {
+            g.setColor(Color.BLACK); 
+            g.drawLine(10, j*10 + 10, arena.getWidth()*10+10, j*10 + 10);
         }
         
     }
