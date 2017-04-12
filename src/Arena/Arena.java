@@ -114,6 +114,11 @@ public class Arena {
         //Execute simultaneously; if two bots move to the same square, both should take damage and neither should take the square
         //But for now... just execute in order of spawning. This can be fixed later
         
+        /*//Move everything into lists first, so we can execute all movements at once, then all shots at once
+        ArrayList<Integer> shootIndices = new ArrayList<>();
+        ArrayList<ShootCommand> shootCommands = new ArrayList<>();
+        ArrayList<Integer> moveIndices = new ArrayList<>();
+        ArrayList<MoveCommand> moveCommands = new ArrayList<>();*/
         
         for(int i = 0; i < participants.size(); i++) {
             if(!participants.get(i).isAlive()) {
@@ -122,11 +127,18 @@ public class Arena {
             }
             ExternalCommand cmd = participants.get(i).executeTurn();
             if(cmd instanceof ShootCommand) {
+                //shootIndices.add(i);
+                //shootCommands.add((ShootCommand) cmd);
                 fireShot(participants.get(i), (ShootCommand)cmd, i);
             } else if(cmd instanceof MoveCommand) {
                 checkAndMakeMove(participants.get(i), (MoveCommand)cmd, i);
             }
         }
+        
+        /*for(int i = 0; i < moveIndices.size(); i++) {
+            I don't know how to force movement to resolve simultaneously yet, so that will be put here later.
+            Simultaneous shooting is easier, and will probably come first.
+        }*/
         
         printActions();
         
@@ -148,11 +160,12 @@ public class Arena {
                     "  End X: " + shot[2] + "  End Y: " + shot[3] + "  Mover: " + shot[4]);
         }
         
-        System.out.println("\nDeaths:");
+        System.out.println("\nDEATHS:");
         for(Integer[] death : droidDeaths) {
             System.out.println("X: " + death[0] + "  Y: " + death[1] +
                     "  Deceased: " + death[2]);
         }
+        System.out.println("\n\n");
     }
     
     private void checkAndMakeMove(Droid d, MoveCommand cmd, int droidIndex) {

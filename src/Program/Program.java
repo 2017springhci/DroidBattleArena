@@ -13,9 +13,11 @@ import java.util.Stack;
 
 public class Program implements Serializable{
     ArrayList<Command> commands;
+    Stack<Command> callStack;
     
     public Program() {
         commands = new ArrayList<>();
+        callStack = new Stack<>();
     }
     
     public void addCommand(Command c) {
@@ -23,21 +25,21 @@ public class Program implements Serializable{
     }
     
     public ExternalCommand runProgram() {
-        //while(true) {
-            Stack<Command> callStack = new Stack<>();
+        if(callStack.empty()) {
             for(int i = commands.size() - 1; i >=0; i--) {
                 callStack.push(commands.get(i));
             }
-            while(!callStack.empty()) {
-                Command c = callStack.pop();
-                if(c instanceof ExternalCommand) {
-                    return (ExternalCommand) c;
-                } else {
-                    c.execute(this);
-                }
+        }
+        while(!callStack.empty()) {
+            //This runs until it hits the end of the program or the first external command, then returns null or the external command, as appropriate
+            Command c = callStack.pop();
+            if(c instanceof ExternalCommand) {
+                return (ExternalCommand) c;
+            } else {
+                c.execute(this);
             }
-            return null;
-        //}
+        }
+        return null;
     }
     
     public void printProgram() {
