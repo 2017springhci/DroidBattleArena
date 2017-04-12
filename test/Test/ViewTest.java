@@ -13,6 +13,7 @@ import static Program.MoveEnum.NORTH;
 import Program.Program;
 import Program.ShootCommand;
 import View.ArenaViewer;
+import java.awt.Dimension;
 import javax.swing.JFrame;
 
 /**
@@ -35,5 +36,6 @@ public class ViewTest {
         frame.add(view);
         frame.pack();
         frame.setVisible(true);
+        frame.setPreferredSize(new Dimension(300, 300));
    }
 }
