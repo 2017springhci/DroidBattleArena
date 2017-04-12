@@ -28,14 +28,17 @@ public class ViewTest {
         p.addCommand(new MoveCommand(EAST));
         p.printProgram();
         Arena a = new Arena(10, 10);
-        Droid d = new Droid(5, 5, p);
-        a.addParticipant(d);
-        a.runGame();
+        Droid d1 = new Droid(5, 5, p);
+        Droid d2 = new Droid(2, 7, p);
+        a.addParticipant(d1);
+        a.addParticipant(d2);
+        
         ArenaViewer view = new ArenaViewer(a);
         JFrame frame = new JFrame();
         frame.add(view);
         frame.pack();
         frame.setVisible(true);
         frame.setPreferredSize(new Dimension(300, 300));
+        a.runGame();
    }
 }

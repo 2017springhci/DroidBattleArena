@@ -72,6 +72,11 @@ public class Arena {
         for(ArenaListener l : listeners) {
             l.arenaNotify();
         }
+        try {
+            Thread.sleep(1000);
+        } catch (Exception e) {
+            //do nothing
+        }
     }
     
     public void addListener(ArenaListener al) {
