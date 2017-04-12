@@ -13,6 +13,7 @@ public class Arena {
     private ArrayList<ArenaListener> listeners;
     private ArrayList<Integer[]> laserShots; //{startX, startY, endX, endY, droidIndex}
     private ArrayList<Integer[]> droidMoves; //{startX, startY, endX, endY, droidIndex}
+    private ArrayList<Integer[]> droidDeaths; //{X, Y, droidIndex}
     
     public Arena(int h, int w) {
         height = h;
@@ -21,6 +22,7 @@ public class Arena {
         listeners = new ArrayList<>();
         droidMoves = new ArrayList<>();
         laserShots = new ArrayList<>();
+        droidDeaths = new ArrayList<>();
     }
 
     /**
@@ -70,6 +72,11 @@ public class Arena {
         for(ArenaListener l : listeners) {
             l.arenaNotify();
         }
+        try {
+            Thread.sleep(1000);
+        } catch (Exception e) {
+            //do nothing
+        }
     }
     
     public void addListener(ArenaListener al) {
@@ -77,20 +84,33 @@ public class Arena {
     }
     
     public boolean gameOver() {
-        //Is the game over? Start with yes
-        return true;
+        //Is the game over?
+        //If one or fewer droids remain, then yes
+        return (howManyAlive() < 2);
+    }
+    
+    public int howManyAlive() {
+        int count = 0;
+        for(Droid d : participants) {
+            if(d.isAlive()) {
+                count++;
+            }
+        }
+        return count;
     }
     
     private void cleanupTurn() {
         //Reset lists, to be ready for the next turn
         laserShots = new ArrayList<>();
         droidMoves = new ArrayList<>();
+        droidDeaths = new ArrayList<>();
     }
     
     public void runGame() {
         do {
             progressTime();
         } while (!gameOver());
+        System.out.println("And it is over!");
     }
     
     public void progressTime() {
@@ -98,14 +118,32 @@ public class Arena {
         //Execute all movement, then all shooting
         //Execute simultaneously; if two bots move to the same square, both should take damage and neither should take the square
         //But for now... just execute in order of spawning. This can be fixed later
+        
+        /*//Move everything into lists first, so we can execute all movements at once, then all shots at once
+        ArrayList<Integer> shootIndices = new ArrayList<>();
+        ArrayList<ShootCommand> shootCommands = new ArrayList<>();
+        ArrayList<Integer> moveIndices = new ArrayList<>();
+        ArrayList<MoveCommand> moveCommands = new ArrayList<>();*/
+        
         for(int i = 0; i < participants.size(); i++) {
+            if(!participants.get(i).isAlive()) {
+                //Dead droids make no moves
+                continue;
+            }
             ExternalCommand cmd = participants.get(i).executeTurn();
             if(cmd instanceof ShootCommand) {
+                //shootIndices.add(i);
+                //shootCommands.add((ShootCommand) cmd);
                 fireShot(participants.get(i), (ShootCommand)cmd, i);
             } else if(cmd instanceof MoveCommand) {
                 checkAndMakeMove(participants.get(i), (MoveCommand)cmd, i);
             }
         }
+        
+        /*for(int i = 0; i < moveIndices.size(); i++) {
+            I don't know how to force movement to resolve simultaneously yet, so that will be put here later.
+            Simultaneous shooting is easier, and will probably come first.
+        }*/
         
         printActions();
         
@@ -126,6 +164,13 @@ public class Arena {
             System.out.println("Start X: " + shot[0] + "  Start Y: " + shot[1] +
                     "  End X: " + shot[2] + "  End Y: " + shot[3] + "  Mover: " + shot[4]);
         }
+        
+        System.out.println("\nDEATHS:");
+        for(Integer[] death : droidDeaths) {
+            System.out.println("X: " + death[0] + "  Y: " + death[1] +
+                    "  Deceased: " + death[2]);
+        }
+        System.out.println("\n\n");
     }
     
     private void checkAndMakeMove(Droid d, MoveCommand cmd, int droidIndex) {
@@ -171,9 +216,22 @@ public class Arena {
         
         //If it is on the screen (between 0 and height for y; between 0 and width for x) then add it to the list of things to display
         if(onScreen(tarX, tarY)) {
-            Integer[] shotEntry = {d.getPosX(), d.getPosX(),
+            Integer[] shotEntry = {d.getPosX(), d.getPosY(),
                 tarX, tarY, droidIndex};
             laserShots.add(shotEntry);
+        }
+        
+        for(int i = 0; i < participants.size(); i++) {
+            Droid bot = participants.get(i);
+            if(bot.getPosX() == tarX && bot.getPosY() == tarY && bot.isAlive()) {
+                //Its a hit! Do damage!
+                bot.processHit();
+                if(!bot.isAlive()) {
+                    //If it died, add it to the list of deaths, in case we want to render those
+                    Integer[] deathEntry = {bot.getPosX(), bot.getPosY(), i};
+                    droidDeaths.add(deathEntry);
+                }
+            }
         }
     }
     
