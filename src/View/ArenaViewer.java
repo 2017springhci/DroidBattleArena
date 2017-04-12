@@ -11,6 +11,9 @@ import Arena.ArenaListener;
 import Arena.Arena;
 import java.util.ArrayList;
 import Arena.Droid;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 
 /**
@@ -20,8 +23,9 @@ import java.awt.GridLayout;
 public class ArenaViewer extends JPanel implements ArenaListener {
     
     final private Arena arena;
-    final private ArrayList<ArrayList<PixelComponent>> grid;
+    final private ArrayList<ArrayList<GridSquare>> grid;
     private ArrayList<Integer[]> lines;
+    private ArrayList<Integer[]> changedSquares;
     
     @Override
     public void arenaNotify() {
@@ -32,36 +36,65 @@ public class ArenaViewer extends JPanel implements ArenaListener {
             grid.get(m[2]).get(m[3]).update(m[4]);
         }
         lines = lasers;
+        repaint();
     }
     
-    public void paintComponent() {
+    @Override
+    protected void paintComponent(Graphics g) 
+    {
+        
+        for (int i = 0; i < arena.getWidth(); ++i) {
+            for (int j = 0; j < arena.getHeight(); ++j) {
+                int cellX = 10 * i + 10;
+                int cellY = 10 * j + 10;
+                System.out.println("At " + i + ", " + j);
+                g.setColor(grid.get(i).get(j).getColor());
+                g.fillRect(cellX, cellY, 10, 10);
+            }
+        }
         
     }
+        
+    /*@Override
+    public void repaint() {
+        super.repaint();
+        for (Integer[] m : changedSquares) {
+            
+            grid.get(m[0]).get(m[1]).clear();
+            grid.get(m[2]).get(m[3]).update(m[4]);
+        }
+    }*/
     
+    
+
     public ArenaViewer (Arena arena) {
         this.arena = arena;
         arena.addListener(this);
-        grid = new ArrayList<ArrayList<PixelComponent>> (arena.getWidth());
-        for (int i = 0; i < arena.getHeight(); ++i) {
-            grid.add(new ArrayList<PixelComponent> (arena.getHeight()));
-            for (int j = 0; j < arena.getWidth(); ++j) {
-                grid.get(i).add(new PixelComponent());
+        grid = new ArrayList<> (arena.getWidth());
+        for (int i = 0; i < arena.getWidth(); ++i) {
+            grid.add(new ArrayList<> (arena.getHeight()));
+            for (int j = 0; j < arena.getHeight(); ++j) {
+                grid.get(i).add(new GridSquare());
             }
         }
-        for (Droid d : arena.getParticipants()) {
-            grid.get(d.getPosX()).get(d.getPosY()).update(d.getAlignment());
+        ArrayList<Droid> participants = arena.getParticipants();
+        for (int i = 0; i < participants.size(); i++) {
+            grid.get(participants.get(i).getPosX()).get(participants.get(i).getPosY()).update(1);
         }
-        GridLayout gl = new GridLayout(arena.getWidth(), arena.getHeight());
+        /*GridLayout gl = new GridLayout(arena.getWidth(), arena.getHeight());
         gl.setHgap(1);
         gl.setVgap(1);
-        this.setLayout(gl);
+        this.setLayout(gl);*/
         //Grid Layout unfortunately requires me to add a row before adding the next one, making logic
         //a bit clunky. Regardless:
-        for (int i = 0; i < arena.getHeight(); ++i) {
-            for (ArrayList<PixelComponent> column : grid) {
+        /*for (int i = 0; i < arena.getHeight(); ++i) {
+            for (ArrayList<GridSquare> column : grid) {
                 this.add(column.get(i));
+                System.out.println("sup");
             }
-        }
+        }*/
+        System.out.println("Width, height are " + arena.getWidth() + ", " + arena.getHeight());
+        this.setPreferredSize(new Dimension (500, 500));
        
         
     }
