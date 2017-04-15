@@ -2,9 +2,10 @@ package Arena;
 
 import Program.ExternalCommand;
 import Program.MoveCommand;
+import Program.RelativePosition;
 import Program.ShootCommand;
 import java.util.ArrayList;
-import Program.MoveEnum;
+import Program.SenseCommand;
 
 public class Arena {
     private int height; //The number of squares high the arena is
@@ -69,13 +70,13 @@ public class Arena {
     }
     
     private void notifyListeners() {
-        for(ArenaListener l : listeners) {
-            l.arenaNotify();
-        }
         try {
             Thread.sleep(1000);
         } catch (Exception e) {
             //do nothing
+        }
+        for(ArenaListener l : listeners) {
+            l.arenaNotify();
         }
     }
     
@@ -115,15 +116,17 @@ public class Arena {
     
     public void progressTime() {
         //Collect all of the external commands
-        //Execute all movement, then all shooting
+        //Execute all movement, then all sensing, then all shooting
         //Execute simultaneously; if two bots move to the same square, both should take damage and neither should take the square
         //But for now... just execute in order of spawning. This can be fixed later
         
-        /*//Move everything into lists first, so we can execute all movements at once, then all shots at once
+        //Move everything into lists first, so we can execute all movements at once, then all shots at once
         ArrayList<Integer> shootIndices = new ArrayList<>();
         ArrayList<ShootCommand> shootCommands = new ArrayList<>();
+        ArrayList<Integer> senseIndices = new ArrayList<>();
+        ArrayList<SenseCommand> senseCommands = new ArrayList<>();
         ArrayList<Integer> moveIndices = new ArrayList<>();
-        ArrayList<MoveCommand> moveCommands = new ArrayList<>();*/
+        ArrayList<MoveCommand> moveCommands = new ArrayList<>();
         
         for(int i = 0; i < participants.size(); i++) {
             if(!participants.get(i).isAlive()) {
@@ -132,18 +135,31 @@ public class Arena {
             }
             ExternalCommand cmd = participants.get(i).executeTurn();
             if(cmd instanceof ShootCommand) {
-                //shootIndices.add(i);
-                //shootCommands.add((ShootCommand) cmd);
-                fireShot(participants.get(i), (ShootCommand)cmd, i);
+                shootIndices.add(i);
+                shootCommands.add((ShootCommand) cmd);
             } else if(cmd instanceof MoveCommand) {
-                checkAndMakeMove(participants.get(i), (MoveCommand)cmd, i);
+                moveIndices.add(i);
+                moveCommands.add((MoveCommand) cmd);
+            } else if(cmd instanceof SenseCommand) {
+                senseIndices.add(i);
+                senseCommands.add((SenseCommand)cmd);
             }
         }
         
-        /*for(int i = 0; i < moveIndices.size(); i++) {
-            I don't know how to force movement to resolve simultaneously yet, so that will be put here later.
-            Simultaneous shooting is easier, and will probably come first.
-        }*/
+        for(int i = 0; i < moveIndices.size(); i++) {
+            //Move, currently in order of placement into the arena
+            checkAndMakeMove(participants.get(moveIndices.get(i)), moveCommands.get(i), moveIndices.get(i));
+        }
+        
+        for(int i = 0; i < senseIndices.size(); i++) {
+            //Sense, in order of placement into the arena (Note: order doesn't matter for this step)
+            sense(participants.get(senseIndices.get(i)), senseCommands.get(i), senseIndices.get(i));
+        }
+        
+        for(int i = 0; i < shootIndices.size(); i++) {
+            //Shoot, in order of placement into the arena (Order also does not matter for this step)
+            fireShot(participants.get(shootIndices.get(i)), shootCommands.get(i), shootIndices.get(i));
+        }
         
         printActions();
         
@@ -232,6 +248,33 @@ public class Arena {
                     droidDeaths.add(deathEntry);
                 }
             }
+        }
+    }
+    
+    private void sense(Droid droid, SenseCommand cmd, int index) {
+        //First, find our position. We may need it to evaluate the sense command.
+        int x = droid.getPosX();
+        int y = droid.getPosY();
+        
+        switch(cmd.getSenseType()) {
+            case NEAREST:
+                //First, find the position of the closest droid
+                double bestDist = Math.sqrt(Math.pow(height, 2) + Math.pow(width, 2)) + 1;
+                RelativePosition bestPos = null;
+                for(Droid d : participants) {
+                    if(!d.equals(droid)) {
+                        double dist = Math.sqrt(Math.pow(x - d.getPosX(), 2) + Math.pow(y - d.getPosY(), 2));
+                        if(dist < bestDist) {
+                            bestDist = dist;
+                            bestPos = new RelativePosition(d.getPosX() - x, d.getPosY() - y);
+                        }
+                    }
+                }
+                droid.setPositionRegister(cmd.getRegisterIndex(), bestPos);
+                System.out.println("BESTPOS: " + bestPos);
+                break;
+            default:
+                //Do nothing
         }
     }
     

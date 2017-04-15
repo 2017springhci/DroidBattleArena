@@ -12,12 +12,14 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 public class Program implements Serializable{
-    ArrayList<Command> commands;
-    Stack<Command> callStack;
+    private ArrayList<Command> commands;
+    private Stack<Command> callStack;
+    private PositionRegister positionRegister;
     
     public Program() {
         commands = new ArrayList<>();
         callStack = new Stack<>();
+        positionRegister = new PositionRegister();
     }
     
     public void addCommand(Command c) {
@@ -36,7 +38,7 @@ public class Program implements Serializable{
             if(c instanceof ExternalCommand) {
                 return (ExternalCommand) c;
             } else {
-                c.execute(this);
+                c.execute();
             }
         }
         return null;
@@ -58,6 +60,7 @@ public class Program implements Serializable{
         } catch(IOException ioe) {
             //We failed to save the file
             System.out.println("Error! Save attempt for " + f.getAbsolutePath() + " failed!");
+            ioe.printStackTrace();
         }
     }
     
@@ -80,5 +83,9 @@ public class Program implements Serializable{
             System.out.println("Error! Load attempt for " + f.getAbsolutePath() + " failed!");
         }
         return program;
+    }
+    
+    public PositionRegister getPositionRegister() {
+        return positionRegister;
     }
 }

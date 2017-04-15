@@ -8,10 +8,11 @@ package Test;
 import Arena.Arena;
 import Arena.Droid;
 import Program.MoveCommand;
-import static Program.MoveEnum.EAST;
-import static Program.MoveEnum.NORTH;
 import static Program.MoveEnum.WEST;
 import Program.Program;
+import Program.SenseCommand;
+import static Program.SenseEnum.NEAREST;
+import Program.ShootCommand;
 import View.ArenaViewer;
 import java.awt.Dimension;
 import java.io.File;
@@ -28,9 +29,11 @@ public class ViewTest {
         System.out.println();
         
         Program p2 = new Program();
-        p2.addCommand(new MoveCommand(NORTH));
-        p2.addCommand(new MoveCommand(EAST));
-        p2.addCommand(new MoveCommand(WEST));
+        p2.addCommand(new SenseCommand(NEAREST, 0));
+        p2.addCommand(new ShootCommand(0, p2));
+        p2.addCommand(new ShootCommand(0, p2));
+        p2.addCommand(new ShootCommand(0, p2));
+        p2.addCommand(new ShootCommand(0, p2));
         p2.printProgram();
         System.out.println();
         
@@ -46,6 +49,7 @@ public class ViewTest {
         frame.pack();
         frame.setVisible(true);
         frame.setPreferredSize(new Dimension(300, 300));
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         a.runGame();
    }
 }

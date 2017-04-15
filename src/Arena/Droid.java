@@ -2,6 +2,7 @@ package Arena;
 
 import Program.ExternalCommand;
 import Program.Program;
+import Program.RelativePosition;
 
 /**
  *
@@ -63,5 +64,10 @@ public class Droid {
     public void processHit() {
         //We've been shot! Decrease our health
         health--;
+    }
+    
+    public void setPositionRegister(int ri, RelativePosition pos) {
+        //Store some data in the Program's PositionRegister
+        prog.getPositionRegister().setPosition(ri, pos);
     }
 }
