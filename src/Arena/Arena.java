@@ -1,5 +1,6 @@
 package Arena;
 
+import Program.Condition;
 import Program.ExternalCommand;
 import Program.MoveCommand;
 import Program.RelativePosition;
@@ -24,6 +25,7 @@ public class Arena {
         droidMoves = new ArrayList<>();
         laserShots = new ArrayList<>();
         droidDeaths = new ArrayList<>();
+        Condition.setArena(this);
     }
 
     /**
@@ -278,7 +280,7 @@ public class Arena {
         }
     }
     
-    private boolean onScreen(int x, int y) {
+    public boolean onScreen(int x, int y) {
         if(0 <= x && x < width) {
             if(0 <= y && y < height) {
                 return true;
@@ -287,7 +289,7 @@ public class Arena {
         return false;
     }
     
-    private Droid currentOccupant(int x, int y) {
+    public Droid currentOccupant(int x, int y) {
         for(Droid d : participants) {
             if(d.getPosX() == x) {
                 if(d.getPosY() == y) {

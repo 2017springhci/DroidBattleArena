@@ -7,15 +7,20 @@ package Test;
 
 import Arena.Arena;
 import Arena.Droid;
+import Program.Condition;
+import static Program.ConditionEnum.CAN_MOVE;
+import Program.IfCommand;
 import Program.MoveCommand;
-import static Program.MoveEnum.WEST;
+import static Program.MoveEnum.EAST;
+import static Program.MoveEnum.NORTH;
+import static Program.MoveEnum.SOUTH;
 import Program.Program;
 import Program.SenseCommand;
 import static Program.SenseEnum.NEAREST;
 import Program.ShootCommand;
+import Program.WhileCommand;
 import View.ArenaViewer;
 import java.awt.Dimension;
-import java.io.File;
 import javax.swing.JFrame;
 
 /**
@@ -24,16 +29,31 @@ import javax.swing.JFrame;
  */
 public class ViewTest {
    public static void main(String[] args) {
-        Program p1 = Program.loadProgram(new File("BotBot.dba"));
+        Program p1 = new Program();
+        
+        Object[] narg = {NORTH};
+        Condition nc = new Condition(CAN_MOVE, narg);
+        WhileCommand wc = new WhileCommand(nc);
+        wc.addCommand(new MoveCommand(NORTH));
+        p1.addCommand(wc);
+        
+        Object[] earg = {EAST};
+        Condition ec = new Condition(CAN_MOVE, earg);
+        IfCommand ic = new IfCommand(ec);
+        ic.addCommand(new MoveCommand(EAST));
+        p1.addCommand(ic);
+        
+        p1.addCommand(new MoveCommand(SOUTH));
+        
         p1.printProgram();
         System.out.println();
         
         Program p2 = new Program();
         p2.addCommand(new SenseCommand(NEAREST, 0));
+        /*p2.addCommand(new ShootCommand(0, p2));
         p2.addCommand(new ShootCommand(0, p2));
         p2.addCommand(new ShootCommand(0, p2));
-        p2.addCommand(new ShootCommand(0, p2));
-        p2.addCommand(new ShootCommand(0, p2));
+        p2.addCommand(new ShootCommand(0, p2));*/
         p2.printProgram();
         System.out.println();
         

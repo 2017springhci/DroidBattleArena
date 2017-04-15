@@ -1,5 +1,6 @@
 package Program;
 
+import Arena.Droid;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -15,15 +16,25 @@ public class Program implements Serializable{
     private ArrayList<Command> commands;
     private Stack<Command> callStack;
     private PositionRegister positionRegister;
+    private Droid myDroid;
     
     public Program() {
         commands = new ArrayList<>();
         callStack = new Stack<>();
         positionRegister = new PositionRegister();
+        myDroid = null;
     }
     
     public void addCommand(Command c) {
         commands.add(c);
+    }
+    
+    public void setDroid(Droid d) {
+        myDroid = d;
+    }
+    
+    public Droid getDroid() {
+        return myDroid;
     }
     
     public ExternalCommand runProgram() {
@@ -38,7 +49,7 @@ public class Program implements Serializable{
             if(c instanceof ExternalCommand) {
                 return (ExternalCommand) c;
             } else {
-                c.execute();
+                c.execute(this);
             }
         }
         return null;
@@ -87,5 +98,9 @@ public class Program implements Serializable{
     
     public PositionRegister getPositionRegister() {
         return positionRegister;
+    }
+    
+    protected Stack<Command> getCallStack() {
+        return callStack;
     }
 }

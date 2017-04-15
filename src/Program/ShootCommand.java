@@ -23,7 +23,7 @@ public class ShootCommand extends ExternalCommand {
         program = p;
     }
     
-    public void execute() {
+    public void execute(Program p) {
         //Do nothing, at the moment
         //This is currently bypassed
     }

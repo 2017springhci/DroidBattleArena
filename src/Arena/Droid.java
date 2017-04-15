@@ -22,6 +22,7 @@ public class Droid {
         posY = y;
         prog = p;
         health = MAX_HEALTH;
+        prog.setDroid(this);
     }
 
     /**

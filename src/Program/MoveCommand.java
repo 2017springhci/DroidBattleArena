@@ -7,7 +7,7 @@ public class MoveCommand extends ExternalCommand {
         this.move = move;
     }
     
-    public void execute() {
+    public void execute(Program p) {
         //Move in the right direction
         switch(move) {
             case NORTH:

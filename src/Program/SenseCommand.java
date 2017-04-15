@@ -10,7 +10,7 @@ public class SenseCommand extends ExternalCommand{
         registerIndex = rn;
     }
     
-    public void execute() {
+    public void execute(Program p) {
         //Do nothing, as this is bypassed at the moment
     }
     
@@ -24,7 +24,7 @@ public class SenseCommand extends ExternalCommand{
                 cmd += "????";
         }
         
-        cmd += " REGISTER INDEX: " + registerIndex;
+        cmd += " REGISTER_INDEX: " + registerIndex;
         
         return cmd;
     }
