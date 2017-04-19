@@ -62,11 +62,13 @@ public class ArenaViewer extends JPanel implements ArenaListener {
             g.setColor(Color.BLACK); 
             g.drawLine(10, j*10 + 10, arena.getWidth()*10+10, j*10 + 10);
         }
-        
-        for (Integer[] l : lines) {
-            g.setColor(Color.CYAN); {
-            g.drawLine(l[0]*10 + 15, l[1]*10 + 15, l[2] * 10 + 15, l[3] * 10 + 15);
-        }
+        //lasers
+        if (lines != null) {
+           for (Integer[] laser: lines) {
+                g.setColor(GridSquare.colorSet(laser[4])); 
+                g.drawLine(laser[0]*10 + 15, laser[1]*10 + 15, 
+                    laser[2] * 10 + 15, laser[3]* 10 + 15);
+            }
         }
         
     }
