@@ -63,6 +63,12 @@ public class ArenaViewer extends JPanel implements ArenaListener {
             g.drawLine(10, j*10 + 10, arena.getWidth()*10+10, j*10 + 10);
         }
         
+        for (Integer[] l : lines) {
+            g.setColor(Color.CYAN); {
+            g.drawLine(l[0]*10 + 15, l[1]*10 + 15, l[2] * 10 + 15, l[3] * 10 + 15);
+        }
+        }
+        
     }
         
     /*@Override
