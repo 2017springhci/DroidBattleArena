@@ -21,8 +21,7 @@ public class GridSquare {
         color = Color.GRAY;
     }
     public void update(int droidID) {
-        //putting this succinctly for now, can be made more ugly to be functional later
-        color = ((droidID == 0) ? Color.BLUE : Color.RED);
+        color = colorSet(droidID);
     }
     public GridSquare(Color color) {
         this.color = color;
@@ -36,6 +35,15 @@ public class GridSquare {
         return color;
     }
     
+    public static Color colorSet(int droidID) {
+        switch (droidID) {
+            case 0: return Color.BLUE;
+            case 1: return Color.RED;
+            case 2: return Color.GREEN;
+            case 3: return Color.MAGENTA;
+            default: return Color.GRAY;
+        }
+    }
     
     
 }
