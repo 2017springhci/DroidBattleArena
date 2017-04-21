@@ -13,7 +13,8 @@ public class StoreCommand extends InternalCommand{
     }
     
     public String toString() {
-        String str = "STORE " + num + " AT INDEX " + index;
+        //String str = "STORE " + num + " AT INDEX " + index;
+        String str ="NumericMemory[" + index + "] <= " + num; //Trying a different format 
         return str;
     }
     

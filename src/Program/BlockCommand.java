@@ -21,7 +21,18 @@ public abstract class BlockCommand extends InternalCommand{
         for(Command c : codeBlock) {
             str += c.toString() + "\n";
         }
+        str = indent(str);
         return str;
+    }
+    
+    private String indent(String str) {
+        String newStr = "";
+        while(!str.isEmpty()) {
+            int next = str.indexOf("\n");
+            newStr += "    " + str.substring(0, next) + "\n";
+            str = str.substring(next + 1, str.length());
+        }
+        return newStr;
     }
     
     public void addCommand(Command c) {

@@ -12,7 +12,7 @@ public class IfCommand extends BlockCommand{
     
     public String toString() {
         String str = "IF (" + cond.toString() + ") {\n" +
-                stringInterior() + "\n}";
+                stringInterior() + "}";
         return str;
     }
     

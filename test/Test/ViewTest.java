@@ -7,9 +7,11 @@ package Test;
 
 import Arena.Arena;
 import Arena.Droid;
+import Program.ArithmeticCommand;
+import static Program.ArithmeticEnum.MULTIPLY;
 import Program.Condition;
 import static Program.ConditionEnum.CAN_MOVE;
-import static Program.ConditionEnum.LESS_THAN;
+import static Program.ConditionEnum.LESS_THAN_NUMERIC;
 import Program.IfCommand;
 import Program.MoveCommand;
 import static Program.MoveEnum.EAST;
@@ -44,13 +46,14 @@ public class ViewTest {
         ic.addCommand(new MoveCommand(EAST));
         p1.addCommand(ic);
         
-        Object[] numarg = {1, 2};
-        p1.addCommand(new StoreCommand(4, 1));
-        p1.addCommand(new StoreCommand(7, 2));
-        Condition ltc = new Condition(LESS_THAN, numarg);
-        IfCommand ic2 = new IfCommand(ltc);
-        ic2.addCommand(new MoveCommand(SOUTH));
-        p1.addCommand(ic2);
+        Object[] numarg = {1, 5};
+        p1.addCommand(new StoreCommand(1, 1));
+        p1.addCommand(new StoreCommand(2, 2));
+        Condition ltc = new Condition(LESS_THAN_NUMERIC, numarg);
+        WhileCommand wc2 = new WhileCommand(ltc);
+        wc2.addCommand(new MoveCommand(SOUTH));
+        wc2.addCommand(new ArithmeticCommand(MULTIPLY, 1, 2, 1));
+        p1.addCommand(wc2);
         
         p1.printProgram();
         System.out.println("\n");
