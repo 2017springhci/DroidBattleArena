@@ -82,6 +82,82 @@ public class Condition {
                 } else {
                     return false;
                 }
+            case GREATER_THAN:
+                //Integers correspond to memory positions
+                if(argument[0] instanceof Integer) {
+                    //Compare to the number stored at index argument[0] in the NumericMemory array
+                    if(argument[1] instanceof Integer) {
+                        //NumericMemory[argument[0]] > NumericMemory[argument[1]]
+                        return ((Number)p.getNumericMemory().get((Integer)argument[0])).doubleValue() >
+                                ((Number)p.getNumericMemory().get((Integer)argument[1])).doubleValue();
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            case GREATER_THAN_NUMERIC:
+                if(argument[0] instanceof Integer) {
+                    //Compare to the number stored at index argument[0] in the NumericMemory array
+                    if(argument[1] instanceof Number) {
+                        //NumericMemory[argument[0]] > argument[1]
+                        return ((Number)p.getNumericMemory().get((Integer)argument[0])).doubleValue() >
+                                ((Number) argument[1]).doubleValue();
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            case GREATER_THAN_DOUBLE_NUMERIC:
+                if(argument[0] instanceof Number) {
+                    if(argument[1] instanceof Number) {
+                        //argument[0] > argument[1]
+                        return ((Number) argument[0]).doubleValue() > ((Number) argument[1]).doubleValue();
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            case EQUAL_TO:
+                //Integers correspond to memory positions
+                if(argument[0] instanceof Integer) {
+                    //Compare to the number stored at index argument[0] in the NumericMemory array
+                    if(argument[1] instanceof Integer) {
+                        //NumericMemory[argument[0]] == NumericMemory[argument[1]]
+                        return ((Number)p.getNumericMemory().get((Integer)argument[0])).doubleValue() ==
+                                ((Number)p.getNumericMemory().get((Integer)argument[1])).doubleValue();
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            case EQUAL_TO_NUMERIC:
+                if(argument[0] instanceof Integer) {
+                    //Compare to the number stored at index argument[0] in the NumericMemory array
+                    if(argument[1] instanceof Number) {
+                        //NumericMemory[argument[0]] < argument[1]
+                        return ((Number)p.getNumericMemory().get((Integer)argument[0])).doubleValue() ==
+                                ((Number) argument[1]).doubleValue();
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            case EQUAL_TO_DOUBLE_NUMERIC:
+                if(argument[0] instanceof Number) {
+                    if(argument[1] instanceof Number) {
+                        //argument[0] == argument[1]
+                        return ((Number) argument[0]).doubleValue() == ((Number) argument[1]).doubleValue();
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
             default:
                 return false;
         }

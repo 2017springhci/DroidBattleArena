@@ -7,5 +7,9 @@ public enum ConditionEnum {
     LESS_THAN_NUMERIC, //Is the number in one memory position less than some constant?
     LESS_THAN_DOUBLE_NUMERIC, //Is one constant less than another constant?
     GREATER_THAN,
-    EQUAL_TO;
+    GREATER_THAN_NUMERIC,
+    GREATER_THAN_DOUBLE_NUMERIC,
+    EQUAL_TO,
+    EQUAL_TO_NUMERIC,
+    EQUAL_TO_DOUBLE_NUMERIC;
 }

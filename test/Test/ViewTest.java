@@ -20,6 +20,7 @@ import static Program.MoveEnum.SOUTH;
 import Program.Program;
 import Program.SenseCommand;
 import static Program.SenseEnum.NEAREST;
+import Program.ShootCommand;
 import Program.StoreCommand;
 import Program.WhileCommand;
 import View.ArenaViewer;
@@ -60,10 +61,10 @@ public class ViewTest {
         
         Program p2 = new Program();
         p2.addCommand(new SenseCommand(NEAREST, 0));
-        /*p2.addCommand(new ShootCommand(0, p2));
         p2.addCommand(new ShootCommand(0, p2));
         p2.addCommand(new ShootCommand(0, p2));
-        p2.addCommand(new ShootCommand(0, p2));*/
+        p2.addCommand(new ShootCommand(0, p2));
+        p2.addCommand(new ShootCommand(0, p2));
         p2.printProgram();
         System.out.println();
         
