@@ -1,6 +1,7 @@
 package Arena;
 
 import Program.Condition;
+import Program.DoNothingCommand;
 import Program.ExternalCommand;
 import Program.MoveCommand;
 import Program.RelativePosition;
@@ -145,6 +146,8 @@ public class Arena {
             } else if(cmd instanceof SenseCommand) {
                 senseIndices.add(i);
                 senseCommands.add((SenseCommand)cmd);
+            } else if(cmd instanceof DoNothingCommand) {
+                //Do nothing
             }
         }
         

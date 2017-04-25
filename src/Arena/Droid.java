@@ -1,5 +1,6 @@
 package Arena;
 
+import Program.DoNothingCommand;
 import Program.ExternalCommand;
 import Program.Program;
 import Program.RelativePosition;
@@ -16,6 +17,12 @@ public class Droid {
     private int posY; //The droid's y coordinate
     private Program prog; //The droid's program
     private int health;
+    
+    public Droid(int x, int y) {
+        posX = x;
+        posY = y;
+        health = MAX_HEALTH;
+    }
     
     public Droid(int x, int y, Program p) {
         posX = x;
@@ -54,7 +61,11 @@ public class Droid {
     }
     
     protected ExternalCommand executeTurn() {
-        return prog.runProgram();
+        if(prog != null) {
+            return prog.runProgram();
+        } else {
+            return new DoNothingCommand();
+        }
     }
     
     public boolean isAlive() {
@@ -70,5 +81,10 @@ public class Droid {
     public void setPositionRegister(int ri, RelativePosition pos) {
         //Store some data in the Program's PositionRegister
         prog.getPositionRegister().setPosition(ri, pos);
+    }
+    
+    public void setProgram(Program p) {
+        prog = p;
+        prog.setDroid(this);
     }
 }
