@@ -17,6 +17,7 @@ public class Droid {
     private int posY; //The droid's y coordinate
     private Program prog; //The droid's program
     private int health;
+    private Arena arena;
     
     public Droid(int x, int y) {
         posX = x;
@@ -86,5 +87,13 @@ public class Droid {
     public void setProgram(Program p) {
         prog = p;
         prog.setDroid(this);
+    }
+    
+    public void setArena(Arena a) {
+        arena = a;
+    }
+    
+    public Arena getArena() {
+        return arena;
     }
 }

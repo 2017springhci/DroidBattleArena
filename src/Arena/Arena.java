@@ -60,6 +60,7 @@ public class Arena {
     
     public void addParticipant(Droid d) {
         participants.add(d);
+        d.setArena(this);
         notifyListeners();
     }
     
