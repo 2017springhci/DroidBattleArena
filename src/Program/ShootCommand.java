@@ -29,7 +29,12 @@ public class ShootCommand extends ExternalCommand {
     }
     
     public String toString() {
-        String str = ("SHOOT X: " + xTarget + " Y: " + yTarget);
+        String str;
+        if(xTarget != null) {
+            str = ("SHOOT X: " + xTarget + " Y: " + yTarget);
+        } else {
+            str = "SHOOT PositionMemory[" + registerIndex + "]";
+        }
         return str;
     }
     

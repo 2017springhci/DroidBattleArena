@@ -158,6 +158,19 @@ public class Condition {
                 } else {
                     return false;
                 }
+            case CLOSER_THAN:
+                if(argument[0] instanceof Integer) {
+                    if(argument[1] instanceof Integer) {
+                        //Is PositionMemory[argument[0]] closer than PositionMemory[argument[1]]
+                        return (Math.pow(p.getPositionRegister().getPosition((Integer) argument[0]).getX(), 2) + 
+                                Math.pow(p.getPositionRegister().getPosition((Integer) argument[0]).getY(), 2) <
+                                Math.pow(p.getPositionRegister().getPosition((Integer) argument[1]).getX(), 2) +
+                                Math.pow(p.getPositionRegister().getPosition((Integer) argument[1]).getY(), 2));
+                    }
+                    return false;
+                } else {
+                    return false;
+                }
             default:
                 return false;
         }
@@ -229,6 +242,114 @@ public class Condition {
                 
                 if (argument[1] instanceof Integer) {
                     str += "NumericMemory[" + ((Integer)argument[1]).toString() + "]";
+                } else {
+                    str += "??";
+                }
+                break;
+            case GREATER_THAN_DOUBLE_NUMERIC:
+                if (argument[0] instanceof Number) {
+                    str = argument[0].toString();
+                } else {
+                    str = "??";
+                }
+                
+                str += " > ";
+                
+                if (argument[1] instanceof Number) {
+                    str += argument[1].toString();
+                } else {
+                    str += "??";
+                }
+                break;
+            case GREATER_THAN_NUMERIC:
+                if (argument[0] instanceof Integer) {
+                    str = "NumericMemory[" + ((Integer)argument[0]).toString() + "]";
+                } else {
+                    str = "??";
+                }
+                
+                str += " > ";
+                
+                if (argument[1] instanceof Number) {
+                    str += argument[1].toString();
+                } else {
+                    str += "??";
+                }
+                break;
+            case GREATER_THAN:
+                // a > b
+                if (argument[0] instanceof Integer) {
+                    str = "NumericMemory[" + ((Integer)argument[0]).toString() + "]";
+                } else {
+                    str = "??";
+                }
+                
+                str += " > ";
+                
+                if (argument[1] instanceof Integer) {
+                    str += "NumericMemory[" + ((Integer)argument[1]).toString() + "]";
+                } else {
+                    str += "??";
+                }
+                break;
+            case EQUAL_TO_DOUBLE_NUMERIC:
+                if (argument[0] instanceof Number) {
+                    str = argument[0].toString();
+                } else {
+                    str = "??";
+                }
+                
+                str += " == ";
+                
+                if (argument[1] instanceof Number) {
+                    str += argument[1].toString();
+                } else {
+                    str += "??";
+                }
+                break;
+            case EQUAL_TO_NUMERIC:
+                if (argument[0] instanceof Integer) {
+                    str = "NumericMemory[" + ((Integer)argument[0]).toString() + "]";
+                } else {
+                    str = "??";
+                }
+                
+                str += " == ";
+                
+                if (argument[1] instanceof Number) {
+                    str += argument[1].toString();
+                } else {
+                    str += "??";
+                }
+                break;
+            case EQUAL_TO:
+                // a == b
+                if (argument[0] instanceof Integer) {
+                    str = "NumericMemory[" + ((Integer)argument[0]).toString() + "]";
+                } else {
+                    str = "??";
+                }
+                
+                str += " == ";
+                
+                if (argument[1] instanceof Integer) {
+                    str += "NumericMemory[" + ((Integer)argument[1]).toString() + "]";
+                } else {
+                    str += "??";
+                }
+                break;
+            case CLOSER_THAN:
+                // a is closer than b
+                if (argument[0] instanceof Integer) {
+                    str = "PositionMemory[" + ((Integer)argument[0]).toString() + "]";
+                } else {
+                    str = "??";
+                }
+                
+                str += " IS_CLOSER_THAN ";
+                
+                if (argument[1] instanceof Integer) {
+                    str += "PositionMemory[" + ((Integer)argument[1]).toString() + "]";
                 } else {
                     str += "??";
                 }

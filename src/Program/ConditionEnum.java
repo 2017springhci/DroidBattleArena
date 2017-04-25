@@ -11,5 +11,6 @@ public enum ConditionEnum {
     GREATER_THAN_DOUBLE_NUMERIC,
     EQUAL_TO,
     EQUAL_TO_NUMERIC,
-    EQUAL_TO_DOUBLE_NUMERIC;
+    EQUAL_TO_DOUBLE_NUMERIC,
+    CLOSER_THAN; //Is one position closer than another position?
 }

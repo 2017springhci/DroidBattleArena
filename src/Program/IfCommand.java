@@ -1,18 +1,30 @@
 package Program;
 
+import java.util.ArrayList;
+
 public class IfCommand extends BlockCommand{
+    ArrayList<Command> elseBlock;
     
     public IfCommand() {
         super();
+        elseBlock = new ArrayList<>();
     }
     
     public IfCommand(Condition c) {
         super(c);
+        elseBlock = new ArrayList<>();
+    }
+    
+    public void addElseCommand(Command c) {
+        elseBlock.add(c);
     }
     
     public String toString() {
         String str = "IF (" + cond.toString() + ") {\n" +
-                stringInterior() + "}";
+                stringInterior(codeBlock) + "}";
+        if(!elseBlock.isEmpty()) {
+            str += " ELSE {\n" + stringInterior(elseBlock) +"}";
+        }
         return str;
     }
     
@@ -25,6 +37,10 @@ public class IfCommand extends BlockCommand{
                 p.getCallStack().push(codeBlock.get(i));
             }
             
+        } else {
+            for(int i = elseBlock.size() - 1; i >= 0; i--) {
+                p.getCallStack().push(elseBlock.get(i));
+            }
         }
     }
 }

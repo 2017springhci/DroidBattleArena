@@ -13,7 +13,7 @@ public class WhileCommand extends BlockCommand{
     
     public String toString() {
         String str = "WHILE (" + cond.toString() + ") {\n" +
-                stringInterior() + "}";
+                stringInterior(codeBlock) + "}";
         return str;
     }
     

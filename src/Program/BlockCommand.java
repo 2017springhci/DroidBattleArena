@@ -16,9 +16,9 @@ public abstract class BlockCommand extends InternalCommand{
         cond = c;
     }
     
-    public String stringInterior() {
+    public String stringInterior(ArrayList<Command> block) {
         String str = "";
-        for(Command c : codeBlock) {
+        for(Command c : block) {
             str += c.toString() + "\n";
         }
         str = indent(str);
