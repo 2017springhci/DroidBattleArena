@@ -2,8 +2,9 @@ package Program;
 
 import Arena.Arena;
 import Arena.Droid;
+import java.io.Serializable;
 
-public class Condition {
+public class Condition implements Serializable{
     private static Arena arena;
     private ConditionEnum condition;
     private Object[] argument;

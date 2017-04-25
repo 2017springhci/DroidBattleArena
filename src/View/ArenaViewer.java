@@ -29,6 +29,7 @@ public class ArenaViewer extends JPanel implements ArenaListener {
     
     @Override
     public void arenaNotify() {
+        System.out.println("I've been notified!");
         ArrayList<Integer[]> moves = arena.getDroidMoves();
         ArrayList<Integer[]> lasers = arena.getLasers();
         for (Integer[] m : moves) {
@@ -36,14 +37,15 @@ public class ArenaViewer extends JPanel implements ArenaListener {
             grid.get(m[2]).get(m[3]).update(m[4]);
         }
         lines = lasers;
-        repaint();
-        this.getParent().repaint();
+        //repaint();
+        //this.getParent().repaint();
+        paintComponent(this.getGraphics());
     }
     
     @Override
     protected void paintComponent(Graphics g) 
     {
-        
+        System.out.println("PAINT!");
         for (int i = 0; i < arena.getWidth(); ++i) {
             for (int j = 0; j < arena.getHeight(); ++j) {
                 int cellX = 10 * i + 10;

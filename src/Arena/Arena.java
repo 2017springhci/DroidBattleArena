@@ -81,6 +81,7 @@ public class Arena {
         }
         for(ArenaListener l : listeners) {
             l.arenaNotify();
+            System.out.println("LISTENER NOTIFIED!");
         }
     }
     
