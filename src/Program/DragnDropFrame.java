@@ -13,6 +13,7 @@ import static Program.MoveEnum.EAST;
 import static Program.MoveEnum.NORTH;
 import static Program.MoveEnum.SOUTH;
 import static Program.MoveEnum.WEST;
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -51,8 +52,10 @@ public class DragnDropFrame extends JFrame {
     JList commandList;
     DefaultListModel model;
     SpinnerModel spinnerModel;
-    String[] Cmds = {"MOVE NORTH", "MOVE SOUTH", "MOVE EAST", "MOVE WEST", "SHOOT"};
+    String[] Cmds = {"MOVE NORTH", "MOVE SOUTH", "MOVE EAST", "MOVE WEST", "SHOOT", "IF,COND(,),{,}ENDIF", "WHILE,COND(,),{,}ENDWHILE"};
     JButton done;
+    JButton save;
+    JButton clear;
     JSpinner firex;
     JSpinner firey;
     Program p;
@@ -69,10 +72,11 @@ public class DragnDropFrame extends JFrame {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 15));
       //panel to hold the value for shooting.....
         JPanel firePanel = new JPanel(new GridLayout(2,2));
+        JPanel listPanel = new JPanel(new BorderLayout());
         fc = new JFileChooser();
      fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-     menuBar = new JMenuBar();
-     setJMenuBar(menuBar);
+     //not using a menu bar anymore
+     /*setJMenuBar(menuBar);
      JMenu mnFile = new JMenu("file");
     menuBar.add(mnFile);
     JMenuItem mntmChooseFileLocation = new JMenuItem("Choose File Location");
@@ -87,7 +91,7 @@ public class DragnDropFrame extends JFrame {
 			}
 		});
 		mnFile.add(mntmChooseFileLocation);
-                
+                */
                 
                 
        
@@ -98,19 +102,52 @@ public class DragnDropFrame extends JFrame {
         firePanel.add(new JLabel("Shoot y value: "));
         firePanel.add(firey);
 
+        
+        
         JScrollPane pane = new JScrollPane();
         pane.setPreferredSize(new Dimension(300, 300));
 
         commandList = new JList(Cmds);
         model = new DefaultListModel();
         JList list = new JList(model);
-        done = new JButton("Done");
-        done.setEnabled(false);
+        save = new JButton("Save");
+        clear = new JButton("Clear");
+        save.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+                            //Program p = new Program();
+                            int fcValue = fc.showOpenDialog(null);
+				if(fcValue == fc.APPROVE_OPTION){
+					f = fc.getSelectedFile();
+					done.setEnabled(true);
+				}
+                            
+                            createProgram();
+                            
+                        
+                            }
+                        
+         });
+        
+        clear.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+                            //Program p = new Program();
+                           model.clear();
+                        }
+         });
+        
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        buttonPanel.add(save);
+        buttonPanel.add(clear);
+        listPanel.add(buttonPanel, BorderLayout.SOUTH);
+        
+        done = new JButton("EXIT");
         done.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
                             //Program p = new Program();
-                            createProgram();
+                            System.exit(0);
                             
                         
                             }
@@ -161,7 +198,8 @@ public class DragnDropFrame extends JFrame {
         panel.add(commandList);
         panel.add(firePanel);
         pane.getViewport().add(list); 
-        panel.add(pane);
+        listPanel.add(pane, BorderLayout.CENTER);
+        panel.add(listPanel);
         panel.add(done);
         
         add(panel);
@@ -236,12 +274,12 @@ public class DragnDropFrame extends JFrame {
              JList.DropLocation dl = (JList.DropLocation) support.getDropLocation();
              int index = dl.getIndex();
 
-            // String[] data = line.split(",");
-            // for (String item: data) {
+             String[] data = line.split(",");
+             for (String item: data) {
            
-              if (!line.isEmpty())
-                 model.add(index++, line.trim());
-            // }
+              if (!item.isEmpty())
+                 model.add(index++, item.trim());
+             }
              return true;
          }
     }
