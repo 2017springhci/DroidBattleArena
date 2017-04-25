@@ -97,7 +97,7 @@ public class ArenaViewer extends JPanel implements ArenaListener {
         }
         ArrayList<Droid> participants = arena.getParticipants();
         for (int i = 0; i < participants.size(); i++) {
-            grid.get(participants.get(i).getPosX()).get(participants.get(i).getPosY()).update(1);
+            grid.get(participants.get(i).getPosX()).get(participants.get(i).getPosY()).update(i);
         }
         /*GridLayout gl = new GridLayout(arena.getWidth(), arena.getHeight());
         gl.setHgap(1);
