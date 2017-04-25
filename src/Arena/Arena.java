@@ -45,7 +45,7 @@ public class Arena {
     
     public ArrayList<Droid> getParticipants() {
         //Return a clone of the object containing participants (to reduce the potential for exploits)
-        return (ArrayList<Droid>)participants.clone();
+        return participants;
     }
     
     public ArrayList<Integer[]> getLasers() {
