@@ -7,8 +7,12 @@ package Test;
 
 import Arena.Arena;
 import Arena.Droid;
+import Program.ArithmeticCommand;
+import static Program.ArithmeticEnum.MULTIPLY;
 import Program.Condition;
 import static Program.ConditionEnum.CAN_MOVE;
+import static Program.ConditionEnum.CLOSER_THAN;
+import static Program.ConditionEnum.LESS_THAN_NUMERIC;
 import Program.IfCommand;
 import Program.MoveCommand;
 import static Program.MoveEnum.EAST;
@@ -18,6 +22,7 @@ import Program.Program;
 import Program.SenseCommand;
 import static Program.SenseEnum.NEAREST;
 import Program.ShootCommand;
+import Program.StoreCommand;
 import Program.WhileCommand;
 import View.ArenaViewer;
 import java.awt.Dimension;
@@ -43,17 +48,33 @@ public class ViewTest {
         ic.addCommand(new MoveCommand(EAST));
         p1.addCommand(ic);
         
-        p1.addCommand(new MoveCommand(SOUTH));
+        Object[] numarg = {1, 5};
+        p1.addCommand(new StoreCommand(1, 1));
+        p1.addCommand(new StoreCommand(2, 2));
+        Condition ltc = new Condition(LESS_THAN_NUMERIC, numarg);
+        WhileCommand wc2 = new WhileCommand(ltc);
+        wc2.addCommand(new MoveCommand(SOUTH));
+        wc2.addCommand(new ArithmeticCommand(MULTIPLY, 1, 2, 1));
+        p1.addCommand(wc2);
         
         p1.printProgram();
-        System.out.println();
+        System.out.println("\n");
         
         Program p2 = new Program();
         p2.addCommand(new SenseCommand(NEAREST, 0));
-        /*p2.addCommand(new ShootCommand(0, p2));
-        p2.addCommand(new ShootCommand(0, p2));
-        p2.addCommand(new ShootCommand(0, p2));
-        p2.addCommand(new ShootCommand(0, p2));*/
+        p2.addCommand(new SenseCommand(NEAREST, 1));
+        Object[] posIndArg = {0, 1};
+        Condition near = new Condition(CLOSER_THAN, posIndArg);
+        IfCommand ic2 = new IfCommand(near);
+        ic2.addCommand(new ShootCommand(0, p2));
+        ic2.addCommand(new ShootCommand(0, p2));
+        ic2.addCommand(new ShootCommand(0, p2));
+        ic2.addCommand(new ShootCommand(0, p2));
+        ic2.addElseCommand(new ShootCommand(1, p2));
+        ic2.addElseCommand(new ShootCommand(1, p2));
+        ic2.addElseCommand(new ShootCommand(1, p2));
+        ic2.addElseCommand(new ShootCommand(1, p2));
+        p2.addCommand(ic2);
         p2.printProgram();
         System.out.println();
         

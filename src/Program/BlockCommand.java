@@ -16,12 +16,23 @@ public abstract class BlockCommand extends InternalCommand{
         cond = c;
     }
     
-    public String stringInterior() {
+    public String stringInterior(ArrayList<Command> block) {
         String str = "";
-        for(Command c : codeBlock) {
+        for(Command c : block) {
             str += c.toString() + "\n";
         }
+        str = indent(str);
         return str;
+    }
+    
+    private String indent(String str) {
+        String newStr = "";
+        while(!str.isEmpty()) {
+            int next = str.indexOf("\n");
+            newStr += "    " + str.substring(0, next) + "\n";
+            str = str.substring(next + 1, str.length());
+        }
+        return newStr;
     }
     
     public void addCommand(Command c) {

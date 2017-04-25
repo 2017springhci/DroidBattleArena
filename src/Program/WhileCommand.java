@@ -13,15 +13,14 @@ public class WhileCommand extends BlockCommand{
     
     public String toString() {
         String str = "WHILE (" + cond.toString() + ") {\n" +
-                stringInterior() + "\n}";
+                stringInterior(codeBlock) + "}";
         return str;
     }
     
     public void execute(Program p) {
         //If the condition is true, add the while statement, then the 
         //code inside the while statement to the call stack
-        if(cond.eval(p.getDroid())) {
-            
+        if(cond.eval(p.getDroid(), p)) {
             p.getCallStack().push(this);
             for(int i = codeBlock.size() - 1; i >= 0; i--) {
                 p.getCallStack().push(codeBlock.get(i));

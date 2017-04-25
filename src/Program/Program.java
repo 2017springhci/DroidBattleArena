@@ -10,12 +10,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Stack;
 
 public class Program implements Serializable{
     private ArrayList<Command> commands;
     private Stack<Command> callStack;
     private PositionRegister positionRegister;
+    private HashMap<Integer, Number> numericMemory;
     private Droid myDroid;
     
     public Program() {
@@ -23,6 +25,7 @@ public class Program implements Serializable{
         callStack = new Stack<>();
         positionRegister = new PositionRegister();
         myDroid = null;
+        numericMemory = new HashMap<>();
     }
     
     public void addCommand(Command c) {
@@ -38,6 +41,16 @@ public class Program implements Serializable{
     }
     
     public ExternalCommand runProgram() {
+        while(!callStack.empty()) {
+            //This runs until it hits the end of the program or the first external command, then returns null or the external command, as appropriate
+            Command c = callStack.pop();
+            if(c instanceof ExternalCommand) {
+                return (ExternalCommand) c;
+            } else {
+                c.execute(this);
+            }
+        }
+        //Start from the top, if we ran out of commands (so if we only had an internal command on the stack, we'll still make a move
         if(callStack.empty()) {
             for(int i = commands.size() - 1; i >=0; i--) {
                 callStack.push(commands.get(i));
@@ -98,6 +111,10 @@ public class Program implements Serializable{
     
     public PositionRegister getPositionRegister() {
         return positionRegister;
+    }
+    
+    public HashMap getNumericMemory() {
+        return numericMemory;
     }
     
     protected Stack<Command> getCallStack() {
