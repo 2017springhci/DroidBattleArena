@@ -59,7 +59,7 @@ public class MainUI extends JFrame {
         file.add(loadPlayerProgram);
         loadPlayerProgram.addActionListener(e -> 
         {       JFileChooser fc = new JFileChooser();
-		fc.setFileFilter(new FileNameExtensionFilter(null, ".dba"));
+		fc.setFileFilter(new FileNameExtensionFilter(null, "dba"));
 		int returnVal = fc.showOpenDialog(this);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			arena.getParticipants().get(0).setProgram(Program.loadProgram(fc.getSelectedFile()));
@@ -69,7 +69,7 @@ public class MainUI extends JFrame {
         file.add(loadEnemyProgram);
         loadEnemyProgram.addActionListener(e -> 
         {       JFileChooser fc = new JFileChooser();
-		fc.setFileFilter(new FileNameExtensionFilter(null, ".dba"));
+		fc.setFileFilter(new FileNameExtensionFilter(null, "dba"));
 		int returnVal = fc.showOpenDialog(this);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			arena.getParticipants().get(1).setProgram(Program.loadProgram(fc.getSelectedFile()));
