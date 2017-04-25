@@ -5,28 +5,36 @@
  */
 package View;
 
+import Arena.Arena;
+import Arena.Droid;
+import Program.Program;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionListener;
+
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  *
  * @author joseph
  */
 public class MainUI extends JFrame {
-    private ArenaViewer arena;
+    private ArenaViewer arenaviewer;
+    private Arena arena;
     private JScrollPane commands;
     private JScrollPane code;
     private JMenuBar menu;
     private JMenu file;
-    private JMenu level;
-    private JMenuItem saveProgram;
-    private JMenuItem loadProgram;
+    private JMenuItem loadPlayerProgram;
+    private JMenuItem loadEnemyProgram;
+    private JMenuItem createProgram;
     private JMenuItem loadLevel;
     private JPanel content;
     public static void main(String[] args ) {
@@ -37,18 +45,43 @@ public class MainUI extends JFrame {
     }
     
     public MainUI () {
-        super(); 
+        super();
+        arena = new Arena(60, 30);
+        arena.addParticipant(new Droid (9, 9, new Program()));
+        arena.addParticipant (new Droid (49, 19, new Program()));
         BorderLayout layout = new BorderLayout();
         content = new JPanel(layout);
         menu = new JMenuBar();
         file = new JMenu("File");
-        loadProgram = new JMenuItem("Load");
-        saveProgram = new JMenuItem("Save");
-        file.add(loadProgram);
+        loadPlayerProgram = new JMenuItem("Load player program");
+        loadEnemyProgram = new JMenuItem("Load enemy program");
+        createProgram = new JMenuItem("Create Program");
+        file.add(loadPlayerProgram);
+        loadPlayerProgram.addActionListener(e -> 
+        {       JFileChooser fc = new JFileChooser();
+		fc.setFileFilter(new FileNameExtensionFilter(".dba"));
+		int returnVal = fc.showOpenDialog(this);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			Arena.getPlayer(0).setProgram(Program.loadProgram(fc.getSelectedFile()));
+		}
+                
+        });
+        loadEnemyProgram.addActionListener(e -> 
+        {       JFileChooser fc = new JFileChooser();
+		fc.setFileFilter(new FileNameExtensionFilter(".dba"));
+		int returnVal = fc.showOpenDialog(this);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			Arena.getPlayer(1).setProgram(Program.loadProgram(fc.getSelectedFile()));
+		}
+                
+        });
+		//view.setFocus();
         file.add(saveProgram);
+        file.add(createProgram);
         menu.add(file);
         level = new JMenu("Level");
         loadLevel = new JMenuItem("Select level");
+        
         level.add(loadLevel);
         menu.add(level);
         content.add(menu,BorderLayout.PAGE_START);
@@ -61,7 +94,8 @@ public class MainUI extends JFrame {
         this.add(content);
         this.pack();
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        //
+        
+        
         
         
         
