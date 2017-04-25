@@ -37,6 +37,7 @@ public class ArenaViewer extends JPanel implements ArenaListener {
         }
         lines = lasers;
         repaint();
+        this.getParent().repaint();
     }
     
     @Override
@@ -111,8 +112,8 @@ public class ArenaViewer extends JPanel implements ArenaListener {
                 System.out.println("sup");
             }
         }*/
-        System.out.println("Width, height are " + arena.getWidth() + ", " + arena.getHeight());
-        this.setPreferredSize(new Dimension (500, 500));
+        //System.out.println("Width, height are " + arena.getWidth() + ", " + arena.getHeight());
+        //this.setPreferredSize(new Dimension (500, 500));
        
         
     }
