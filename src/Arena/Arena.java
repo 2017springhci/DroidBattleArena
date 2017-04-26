@@ -14,6 +14,7 @@ public class Arena {
     private int width; //The number of squares wide the arena is
     private ArrayList<Droid> participants; //The droids in the arena
     private ArrayList<ArenaListener> listeners;
+    private ArrayList <LogListener> logListeners;
     private ArrayList<Integer[]> laserShots; //{startX, startY, endX, endY, droidIndex}
     private ArrayList<Integer[]> droidMoves; //{startX, startY, endX, endY, droidIndex}
     private ArrayList<Integer[]> droidDeaths; //{X, Y, droidIndex}
@@ -23,6 +24,7 @@ public class Arena {
         width = w;
         participants = new ArrayList<>();
         listeners = new ArrayList<>();
+        logListeners = new ArrayList<LogListener>();
         droidMoves = new ArrayList<>();
         laserShots = new ArrayList<>();
         droidDeaths = new ArrayList<>();
@@ -87,6 +89,16 @@ public class Arena {
     
     public void addListener(ArenaListener al) {
         listeners.add(al);
+    }
+    
+    public void notifyLogListeners(String output) {
+        for(LogListener ll : logListeners) {
+            ll.logNotify(output);
+        }
+    }
+    
+    public void addLogListener(LogListener ll) {
+        logListeners.add(ll);
     }
     
     public boolean gameOver() {
@@ -196,9 +208,7 @@ public class Arena {
         }
         output += ("\n\n\n");
         System.out.print(output);
-        for(ArenaListener al : listeners) {
-            al.logNotify(output);
-        }
+        notifyLogListeners(output);
     }
     
     private void checkAndMakeMove(Droid d, MoveCommand cmd, int droidIndex) {
