@@ -95,6 +95,9 @@ public class MainUI extends JFrame {
         content.add(arenaViewer);
         content.setPreferredSize(new Dimension(625, 340));
         log = new ArenaLogger();
+        log.append("Welcome to Droid Battle Arena! Load programs to get started.");
+        log.setEditable(false);
+        log.setPreferredSize(new Dimension(625, 100));
         content.add(log, BorderLayout.SOUTH);
         this.add(content);
         this.pack();
