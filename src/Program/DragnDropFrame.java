@@ -56,7 +56,7 @@ public class DragnDropFrame extends JFrame {
     DefaultListModel model;
     SpinnerModel spinnerModel;
     String[] conditions = {"CAN_MOVE_NORTH","CAN_MOVE_SOUTH", "CAN_MOVE_EAST","CAN_MOVE_WEST","LESS_THAN","LESS_THAN_NUMERIC", "LESS_THAN_DOUBLE_NUMERIC", "GREATER_THAN", "GREATER_THAN_NUMERIC", "GREATER_THAN_DOUBLE_NUMERIC", "EQUAL_TO", "EQUAL_TO_NUMERIC", "EQUAL_TO_DOUBLE_NUMERIC", "CLOSER_THAN"};
-    String[] Cmds = {"MOVE NORTH", "MOVE SOUTH", "MOVE EAST", "MOVE WEST", "SHOOT", "IF,COND(,),{,}ENDIF,ELSE{,}", "WHILE,COND(,),{,}ENDWHILE"};
+    String[] Cmds = {"MOVE NORTH", "MOVE SOUTH", "MOVE EAST", "MOVE WEST", "SHOOT", "IF,COND,(,),{,}ENDIF,ELSE{,}", "WHILE,COND,(,),{,}ENDWHILE"};
     JButton done;
     JButton save;
     JButton clear;
@@ -238,6 +238,16 @@ public class DragnDropFrame extends JFrame {
         for (int i = 0; i < model.size(); i++){
             String s = (String) model.get(i);
            //can no longer use switch statement becuase of if/else stuff. Will have to move to series of if statements....
+           if(s.startsWith("IF")|| s.startsWith("WHILE")){
+               if(s.startsWith("IF")){
+                   IfCommand x = new IfCommand();
+                   String[] cond = model.get(i+2).toString().split(" ");
+                  // x.setCondition(new Condition());
+               }
+               
+          }
+          else{
+           
             switch(s) {
             case "MOVE NORTH":
                 p.addCommand(new MoveCommand(NORTH));
@@ -254,8 +264,9 @@ public class DragnDropFrame extends JFrame {
             default:
                 String[] sArray = s.split(" ");
                 p.addCommand(new ShootCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
-        }
-            
+                    }
+           }
+           
             
         }
                    Program.saveProgram(p, f);
