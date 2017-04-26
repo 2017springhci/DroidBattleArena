@@ -29,8 +29,10 @@ import java.io.File;
 import javax.swing.DefaultListModel;
 import javax.swing.DropMode;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -50,14 +52,18 @@ public class DragnDropFrame extends JFrame {
 
     JTextField field;
     JList commandList;
+    JList conditionList;
     DefaultListModel model;
     SpinnerModel spinnerModel;
-    String[] Cmds = {"MOVE NORTH", "MOVE SOUTH", "MOVE EAST", "MOVE WEST", "SHOOT", "IF,COND(,),{,}ENDIF", "WHILE,COND(,),{,}ENDWHILE"};
+    String[] conditions = {"CAN_MOVE_NORTH","CAN_MOVE_SOUTH", "CAN_MOVE_EAST","CAN_MOVE_WEST","LESS_THAN","LESS_THAN_NUMERIC", "LESS_THAN_DOUBLE_NUMERIC", "GREATER_THAN", "GREATER_THAN_NUMERIC", "GREATER_THAN_DOUBLE_NUMERIC", "EQUAL_TO", "EQUAL_TO_NUMERIC", "EQUAL_TO_DOUBLE_NUMERIC", "CLOSER_THAN"};
+    String[] Cmds = {"MOVE NORTH", "MOVE SOUTH", "MOVE EAST", "MOVE WEST", "SHOOT", "IF,COND,(,),{,}ENDIF,ELSE{,}", "WHILE,COND,(,),{,}ENDWHILE"};
     JButton done;
     JButton save;
     JButton clear;
     JSpinner firex;
     JSpinner firey;
+    JSpinner condArg1;
+    JSpinner condArg2;
     Program p;
     JFileChooser fc;
     JMenuBar menuBar;
@@ -97,17 +103,23 @@ public class DragnDropFrame extends JFrame {
        
         firex = new JSpinner();
         firey = new JSpinner();
+        
+        
         firePanel.add(new JLabel("Shoot x value: "));
         firePanel.add(firex);
         firePanel.add(new JLabel("Shoot y value: "));
         firePanel.add(firey);
 
+        condArg1 = new JSpinner();
+        condArg2 = new JSpinner();
+        
         
         
         JScrollPane pane = new JScrollPane();
         pane.setPreferredSize(new Dimension(300, 300));
 
         commandList = new JList(Cmds);
+        conditionList = new JList(conditions);
         model = new DefaultListModel();
         JList list = new JList(model);
         save = new JButton("Save");
@@ -193,10 +205,15 @@ public class DragnDropFrame extends JFrame {
         //field.setPreferredSize(new Dimension(150, 25));
         //field.setDragEnabled(true);
         commandList.setDragEnabled(true);
+        conditionList.setDragEnabled(true);
 
 //        panel.add(field);
         panel.add(commandList);
         panel.add(firePanel);
+        panel.add(condArg1);
+        panel.add(conditionList);
+        panel.add(condArg2);
+        
         pane.getViewport().add(list); 
         listPanel.add(pane, BorderLayout.CENTER);
         panel.add(listPanel);
@@ -220,6 +237,17 @@ public class DragnDropFrame extends JFrame {
         p = new Program();
         for (int i = 0; i < model.size(); i++){
             String s = (String) model.get(i);
+           //can no longer use switch statement becuase of if/else stuff. Will have to move to series of if statements....
+           if(s.startsWith("IF")|| s.startsWith("WHILE")){
+               if(s.startsWith("IF")){
+                   IfCommand x = new IfCommand();
+                   String[] cond = model.get(i+2).toString().split(" ");
+                  // x.setCondition(new Condition());
+               }
+               
+          }
+          else{
+           
             switch(s) {
             case "MOVE NORTH":
                 p.addCommand(new MoveCommand(NORTH));
@@ -236,8 +264,9 @@ public class DragnDropFrame extends JFrame {
             default:
                 String[] sArray = s.split(" ");
                 p.addCommand(new ShootCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
-        }
-            
+                    }
+           }
+           
             
         }
                    Program.saveProgram(p, f);
@@ -266,6 +295,9 @@ public class DragnDropFrame extends JFrame {
                 line = (String) transferable.getTransferData(DataFlavor.stringFlavor);
                 if(line.equals("SHOOT")){
                     line = line + " " + firex.getValue() + " " + firey.getValue();
+                }
+                if(line.startsWith("LESS_THAN") || line.startsWith("GREATER") || line.startsWith("EQUAL") || line.startsWith("CLOSER")){
+                    line = condArg1.getValue() + " " + line + " " + condArg2.getValue();
                 }
              } catch (Exception e) {
                return false;
