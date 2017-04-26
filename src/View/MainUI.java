@@ -11,7 +11,6 @@ import Program.DragnDropFrame;
 import Program.Program;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.ActionListener;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -19,7 +18,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -37,6 +36,7 @@ public class MainUI extends JFrame {
     private final JMenuItem loadEnemyProgram;
     private final JMenuItem createProgram;
     private final JPanel content;
+    private final JTextArea log;
     public static void main(String[] args ) {
         MainUI toRun = new MainUI();
         toRun.setVisible(true);
@@ -44,7 +44,7 @@ public class MainUI extends JFrame {
         
     }
     
-    public MainUI () {
+    public MainUI() {
         super();
         arena = new Arena(30, 60);
         arena.addParticipant(new Droid (9, 9, new Program()));
@@ -94,6 +94,8 @@ public class MainUI extends JFrame {
         arenaViewer = new ArenaViewer(arena);
         content.add(arenaViewer);
         content.setPreferredSize(new Dimension(625, 340));
+        log = new ArenaLogger();
+        content.add(log, BorderLayout.SOUTH);
         this.add(content);
         this.pack();
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -104,5 +106,6 @@ public class MainUI extends JFrame {
         
         
     }
+    
     
 }
