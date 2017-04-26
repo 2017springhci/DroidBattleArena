@@ -6,16 +6,12 @@
 package View;
 
 import javax.swing.JPanel;
-import java.awt.event.ActionEvent;
 import Arena.ArenaListener;
 import Arena.Arena;
 import java.util.ArrayList;
 import Arena.Droid;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.GridLayout;
-
 /**
  *
  * @author joseph
@@ -26,6 +22,7 @@ public class ArenaViewer extends JPanel implements ArenaListener {
     final private ArrayList<ArrayList<GridSquare>> grid;
     private ArrayList<Integer[]> lines;
     private ArrayList<Integer[]> changedSquares;
+    private ArrayList<String> log;
     
     @Override
     public void arenaNotify() {
@@ -90,6 +87,7 @@ public class ArenaViewer extends JPanel implements ArenaListener {
 
     public ArenaViewer (Arena arena) {
         this.arena = arena;
+        this.log = new ArrayList<String>();
         arena.addListener(this);
         grid = new ArrayList<> (arena.getWidth());
         for (int i = 0; i < arena.getWidth(); ++i) {
@@ -119,6 +117,10 @@ public class ArenaViewer extends JPanel implements ArenaListener {
        
         
     }
+    
+ 
+    
+    
     
     
 }
