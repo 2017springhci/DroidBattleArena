@@ -176,24 +176,29 @@ public class Arena {
     }
     
     private void printActions() {
-        System.out.println("SHOTS:");
+        String output = "";
+        output += "SHOTS:\n";
         for(Integer[] shot : laserShots) {
-            System.out.println("Start X: " + shot[0] + "  Start Y: " + shot[1] +
-                    "  End X: " + shot[2] + "  End Y: " + shot[3] + "  Shooter: " + shot[4]);
+            output += ("Start X: " + shot[0] + "  Start Y: " + shot[1] +
+                    "  End X: " + shot[2] + "  End Y: " + shot[3] + "  Shooter: " + shot[4] + "\n");
         }
         
-        System.out.println("\nMOVES:");
+        output += ("\nMOVES:\n");
         for(Integer[] shot : droidMoves) {
-            System.out.println("Start X: " + shot[0] + "  Start Y: " + shot[1] +
-                    "  End X: " + shot[2] + "  End Y: " + shot[3] + "  Mover: " + shot[4]);
+            output += ("Start X: " + shot[0] + "  Start Y: " + shot[1] +
+                    "  End X: " + shot[2] + "  End Y: " + shot[3] + "  Mover: " + shot[4] + "\n");
         }
         
-        System.out.println("\nDEATHS:");
+        output += ("\nDEATHS:\n");
         for(Integer[] death : droidDeaths) {
-            System.out.println("X: " + death[0] + "  Y: " + death[1] +
-                    "  Deceased: " + death[2]);
+            output += ("X: " + death[0] + "  Y: " + death[1] +
+                    "  Deceased: " + death[2]+ "\n");
         }
-        System.out.println("\n\n");
+        output += ("\n\n\n");
+        System.out.print(output);
+        for(ArenaListener al : listeners) {
+            al.logNotify(output);
+        }
     }
     
     private void checkAndMakeMove(Droid d, MoveCommand cmd, int droidIndex) {
