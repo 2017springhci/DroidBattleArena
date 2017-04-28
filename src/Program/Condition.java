@@ -14,6 +14,26 @@ public class Condition implements Serializable{
         //Do something
         condition = ce;
         argument = arg;
+        if(condition == ConditionEnum.CAN_MOVE) {
+            if(argument[0] instanceof String) {
+                arg = new Object[1];
+                switch((String)argument[0]) {
+                    case("NORTH"):
+                        arg[0] = (Object) MoveEnum.NORTH;
+                        break;
+                    case("EAST"):
+                        arg[0] = (Object) MoveEnum.EAST;
+                        break;
+                    case("SOUTH"):
+                        arg[0] = (Object) MoveEnum.SOUTH;
+                        break;
+                    case("WEST"):
+                        arg[0] = (Object) MoveEnum.WEST;
+                        break;
+                }
+                argument = arg;
+            }
+        }
     }
     
     public static void setArena(Arena a) {
