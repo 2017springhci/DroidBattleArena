@@ -200,22 +200,46 @@ public class Arena {
     
     private void printActions() {
         String output = "";
-        output += "SHOTS:\n";
-        for(Integer[] shot : laserShots) {
-            output += ("Start X: " + shot[0] + "  Start Y: " + shot[1] +
-                    "  End X: " + shot[2] + "  End Y: " + shot[3] + "  Shooter: " + shot[4] + "\n");
-        }
         
         output += ("\nMOVES:\n");
         for(Integer[] shot : droidMoves) {
-            output += ("Start X: " + shot[0] + "  Start Y: " + shot[1] +
-                    "  End X: " + shot[2] + "  End Y: " + shot[3] + "  Mover: " + shot[4] + "\n");
+            output += "Player " + shot[4];
+            int northSouth = shot[3] - shot[1];
+            int eastWest = shot[2] - shot[0];
+            if(northSouth == 0) {
+                //The move was east, west, or bumped into a wall (and thus stayed still)
+                if(eastWest > 0) {
+                    //east
+                    output += " Moved EAST";
+                } else if (eastWest < 0) {
+                    //west
+                    output += " Moved WEST";
+                } else {
+                    //Stayed still
+                    output += " Rammed a wall";
+                }
+            } else if (northSouth > 0) {
+                output += " Moved SOUTH";
+            } else {
+                output += " Moved NORTH";
+            }
+            
+            output += " [Start X: " + shot[0] + "  Start Y: " + shot[1] +
+                    "  End X: " + shot[2] + "  End Y: " + shot[3] + "  Mover: " + shot[4] + "]\n";
         }
+        
+        
+        output += "\nSHOTS:\n";
+        for(Integer[] shot : laserShots) {
+            output += "Player " + shot[4] + " has fired. " + ("[Start X: " + shot[0] + "  Start Y: " + shot[1] +
+                    "  End X: " + shot[2] + "  End Y: " + shot[3] + "  Shooter: " + shot[4] + "]\n");
+        }
+        
         
         output += ("\nDEATHS:\n");
         for(Integer[] death : droidDeaths) {
-            output += ("X: " + death[0] + "  Y: " + death[1] +
-                    "  Deceased: " + death[2]+ "\n");
+            output += "Player " + death[2] + " has been defeated!" + (" [X: " + death[0] + "  Y: " + death[1] +
+                    "  Deceased: " + death[2]+ "]\n");
         }
         output += ("\n\n\n");
         System.out.print(output);
