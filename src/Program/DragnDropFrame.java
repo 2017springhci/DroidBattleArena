@@ -55,7 +55,7 @@ public class DragnDropFrame extends JFrame {
     JList conditionList;
     DefaultListModel model;
     SpinnerModel spinnerModel;
-    String[] conditions = {"CAN_MOVE_NORTH","CAN_MOVE_SOUTH", "CAN_MOVE_EAST","CAN_MOVE_WEST","LESS_THAN","LESS_THAN_NUMERIC", "LESS_THAN_DOUBLE_NUMERIC", "GREATER_THAN", "GREATER_THAN_NUMERIC", "GREATER_THAN_DOUBLE_NUMERIC", "EQUAL_TO", "EQUAL_TO_NUMERIC", "EQUAL_TO_DOUBLE_NUMERIC", "CLOSER_THAN"};
+    String[] conditions = {"CAN_MOVE NORTH","CAN_MOVE SOUTH", "CAN_MOVE EAST","CAN_MOVE WEST","LESS_THAN","LESS_THAN_NUMERIC", "LESS_THAN_DOUBLE_NUMERIC", "GREATER_THAN", "GREATER_THAN_NUMERIC", "GREATER_THAN_DOUBLE_NUMERIC", "EQUAL_TO", "EQUAL_TO_NUMERIC", "EQUAL_TO_DOUBLE_NUMERIC", "CLOSER_THAN"};
     String[] Cmds = {"MOVE NORTH", "MOVE SOUTH", "MOVE EAST", "MOVE WEST", "SHOOT", "IF,COND,(,),{,}ENDIF,ELSE{,}", "WHILE,COND,(,),{,}ENDWHILE"};
     JButton done;
     JButton save;
@@ -81,23 +81,7 @@ public class DragnDropFrame extends JFrame {
         JPanel listPanel = new JPanel(new BorderLayout());
         fc = new JFileChooser();
      fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-     //not using a menu bar anymore
-     /*setJMenuBar(menuBar);
-     JMenu mnFile = new JMenu("file");
-    menuBar.add(mnFile);
-    JMenuItem mntmChooseFileLocation = new JMenuItem("Choose File Location");
-		mntmChooseFileLocation.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				//open JFileChooser
-				int fcValue = fc.showOpenDialog(null);
-				if(fcValue == fc.APPROVE_OPTION){
-					f = fc.getSelectedFile();
-					done.setEnabled(true);
-				}
-			}
-		});
-		mnFile.add(mntmChooseFileLocation);
-                */
+    
                 
                 
        
@@ -159,6 +143,7 @@ public class DragnDropFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
                             //Program p = new Program();
+                            p.printProgram();
                             System.exit(0);
                             
                         
@@ -235,14 +220,112 @@ public class DragnDropFrame extends JFrame {
     
     private void createProgram(){
         p = new Program();
-        for (int i = 0; i < model.size(); i++){
+        int i = 0;
+        while(i < model.size()){
             String s = (String) model.get(i);
            //can no longer use switch statement becuase of if/else stuff. Will have to move to series of if statements....
            if(s.startsWith("IF")|| s.startsWith("WHILE")){
+               
                if(s.startsWith("IF")){
                    IfCommand x = new IfCommand();
-                   String[] cond = model.get(i+2).toString().split(" ");
-                  // x.setCondition(new Condition());
+                   i +=3;
+                   String[] cond = model.get(i).toString().split(" ");
+                   if(cond.length == 3){
+                        Integer[] arguments = {Integer.parseInt(cond[0]), Integer.parseInt(cond[2])};
+                        x.setCondition(new Condition(ConditionEnum.valueOf(cond[1]),arguments));
+                   }
+                   else{
+                       String[] arguments = {cond[1]};
+                       x.setCondition(new Condition(ConditionEnum.valueOf(cond[0]), arguments));
+                   }
+                   i+=3;
+                   while(!model.get(i).toString().startsWith("}")){
+                       s= (String) model.get(i);
+                        switch(s) {
+                        case "MOVE NORTH":
+                            x.addCommand(new MoveCommand(NORTH));
+                            break;
+                        case "MOVE EAST":
+                            x.addCommand(new MoveCommand(EAST));
+                            break;
+                        case "MOVE WEST":
+                            x.addCommand(new MoveCommand(WEST));
+                            break;
+                        case "MOVE SOUTH":
+                            x.addCommand(new MoveCommand(SOUTH));
+                            break;
+                        default:
+                            String[] sArray = s.split(" ");
+                            x.addCommand(new ShootCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
+                                }
+                       i++;
+                   }
+                   //to bypass else
+                   i+=2;
+                   while(!model.get(i).toString().startsWith("}")){
+                       s= (String) model.get(i);
+                        switch(s) {
+                        case "MOVE NORTH":
+                            x.addElseCommand(new MoveCommand(NORTH));
+                            break;
+                        case "MOVE EAST":
+                            x.addElseCommand(new MoveCommand(EAST));
+                            break;
+                        case "MOVE WEST":
+                            x.addElseCommand(new MoveCommand(WEST));
+                            break;
+                        case "MOVE SOUTH":
+                            x.addElseCommand(new MoveCommand(SOUTH));
+                            break;
+                        default:
+                            String[] sArray = s.split(" ");
+                            x.addElseCommand(new ShootCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
+                             }
+                       i++;
+                   }
+                   p.addCommand(x);
+                   
+                   
+               }
+               
+               if(s.startsWith("WHILE")){
+                   WhileCommand x = new WhileCommand();
+                   i +=3;
+                   String[] cond = model.get(i).toString().split(" ");
+                   if(cond.length ==3){
+                   Integer[] arguments = {Integer.parseInt(cond[0]), Integer.parseInt(cond[2])};
+                   x.setCondition(new Condition(ConditionEnum.valueOf(cond[1]),arguments));
+                   }
+                   else{
+                       String[] arguments = {cond[1]};
+                       x.setCondition(new Condition(ConditionEnum.valueOf(cond[0]), arguments));
+                   }
+                   i+=3;
+                   while(!model.get(i).toString().startsWith("}")){
+                       s= (String) model.get(i);
+                        switch(s) {
+                        case "MOVE NORTH":
+                            x.addCommand(new MoveCommand(NORTH));
+                            break;
+                        case "MOVE EAST":
+                            x.addCommand(new MoveCommand(EAST));
+                            break;
+                        case "MOVE WEST":
+                            x.addCommand(new MoveCommand(WEST));
+                            break;
+                        case "MOVE SOUTH":
+                            x.addCommand(new MoveCommand(SOUTH));
+                            break;
+                        default:
+                            String[] sArray = s.split(" ");
+                            x.addCommand(new ShootCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
+                                }
+                       i++;
+                   }
+                   
+                   p.addCommand(x);
+                   
+                   
                }
                
           }
@@ -267,7 +350,7 @@ public class DragnDropFrame extends JFrame {
                     }
            }
            
-            
+            i++;
         }
                    Program.saveProgram(p, f);
 
@@ -318,5 +401,6 @@ public class DragnDropFrame extends JFrame {
 
     public static void main(String[] args) {
         new DragnDropFrame();
+        
     }
 }
