@@ -58,7 +58,7 @@ public class DragnDropFrame extends JFrame {
     DefaultListModel model;
     SpinnerModel spinnerModel;
     String[] conditions = {"CAN_MOVE NORTH","CAN_MOVE SOUTH", "CAN_MOVE EAST","CAN_MOVE WEST","LESS_THAN","LESS_THAN_NUMERIC", "LESS_THAN_DOUBLE_NUMERIC", "GREATER_THAN", "GREATER_THAN_NUMERIC", "GREATER_THAN_DOUBLE_NUMERIC", "EQUAL_TO", "EQUAL_TO_NUMERIC", "EQUAL_TO_DOUBLE_NUMERIC", "CLOSER_THAN"};
-    String[] Cmds = {"MOVE_NORTH", "MOVE_SOUTH", "MOVE_EAST", "MOVE_WEST", "SHOOT","SHOOT_FROM_MEM", "STORE","ADD","SUBTRACT", "MULTIPLY","DIVIDE", "IF,COND,(,),{,}ENDIF,ELSE{,}", "WHILE,COND,(,),{,}ENDWHILE"};
+    String[] Cmds = {"MOVE_NORTH", "MOVE_SOUTH", "MOVE_EAST", "MOVE_WEST", "SENSE", "SHOOT","SHOOT_FROM_MEM", "STORE","ADD","SUBTRACT", "MULTIPLY","DIVIDE", "IF,COND,(,),{,}ENDIF,ELSE{,}", "WHILE,COND,(,),{,}ENDWHILE"};
     JButton done;
     JButton save;
     JButton clear;
@@ -152,6 +152,14 @@ public class DragnDropFrame extends JFrame {
                    firey.setVisible(false);
                    firez.setVisible(false);
                }
+               else if(commandList.getSelectedValue().equals("SENSE")){
+                   xval.setText("Reg. Index");
+                   yval.setText("");
+                   zval.setText("");
+                   firex.setVisible(true);
+                   firey.setVisible(false);
+                   firez.setVisible(false);
+               }
                
                else if(commandList.getSelectedValue().equals("ADD") || commandList.getSelectedValue().equals("SUBTRACT") || commandList.getSelectedValue().equals("MULTIPLY") || commandList.getSelectedValue().equals("DIVIDE")){
                   xval.setText("First Index: ");
@@ -169,6 +177,7 @@ public class DragnDropFrame extends JFrame {
                     firey.setVisible(false);
                     firez.setVisible(false);
                 }
+                pack();
             }
             
         });
@@ -352,6 +361,9 @@ public class DragnDropFrame extends JFrame {
             case "SHOOT_FROM_MEM":
                 x.addCommand(new ShootCommand(Integer.parseInt(sArray[1]), p));
                 break;
+            case "SENSE":
+                x.addCommand(new SenseCommand(SenseEnum.NEAREST, Integer.parseInt(sArray[1])));
+                break;
             default:
                 
                     }
@@ -396,6 +408,9 @@ public class DragnDropFrame extends JFrame {
                 break;
             case "SHOOT_FROM_MEM":
                 x.addElseCommand(new ShootCommand(Integer.parseInt(sArray[1]), p));
+                break;
+            case "SENSE":
+                x.addElseCommand(new SenseCommand(SenseEnum.NEAREST, Integer.parseInt(sArray[1])));
                 break;
             default:
                 
@@ -458,6 +473,9 @@ public class DragnDropFrame extends JFrame {
             case "SHOOT_FROM_MEM":
                 x.addCommand(new ShootCommand(Integer.parseInt(sArray[1]), p));
                 break;
+            case "SENSE":
+                x.addCommand(new SenseCommand(SenseEnum.NEAREST, Integer.parseInt(sArray[1])));
+                break;
             default:
                 
                     }
@@ -507,6 +525,9 @@ public class DragnDropFrame extends JFrame {
             case "SHOOT_FROM_MEM":
                 p.addCommand(new ShootCommand(Integer.parseInt(sArray[1]), p));
                 break;
+            case "SENSE":
+                p.addCommand(new SenseCommand(SenseEnum.NEAREST, Integer.parseInt(sArray[1])));
+                break;
             default:
                 
                     }
@@ -548,6 +569,9 @@ public class DragnDropFrame extends JFrame {
                     line = condArg1.getValue() + " " + line + " " + condArg2.getValue();
                 }
                 if(line.equals("SHOOT_FROM_MEM")){
+                    line = line + " " + firex.getValue();
+                }
+                if(line.equals("SENSE")){
                     line = line + " " + firex.getValue();
                 }
                 if(line.equals("ADD") || line.equals("SUBTRACT") || line.equals("MULTIPLY") || line.equals("DIVIDE")){
