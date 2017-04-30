@@ -7,6 +7,7 @@ package View;
 
 import Arena.Arena;
 import Arena.Droid;
+import Arena.LogListener;
 import Program.DragnDropFrame;
 import Program.Program;
 import java.awt.BorderLayout;
@@ -86,17 +87,21 @@ public class MainUI extends JFrame {
         play = new JMenu("Play");
         battle = new JMenuItem("Battle");
         battle.addActionListener(e -> {
+            menu.repaint();
             arena.runGame();
+            
         });
         play.add(battle);
         menu.add(play);
         content.add(menu,BorderLayout.PAGE_START);
         arenaViewer = new ArenaViewer(arena);
+        arenaViewer.setPreferredSize(new Dimension(575, 315));
         content.add(arenaViewer);
-        content.setPreferredSize(new Dimension(625, 340));
         log = new ArenaLogger();
         log.append("Welcome to Droid Battle Arena! Load programs to get started.");
+        log.append("\n");
         log.setEditable(false);
+        arena.addLogListener((LogListener) log);
         log.setPreferredSize(new Dimension(625, 100));
         content.add(log, BorderLayout.SOUTH);
         this.add(content);
