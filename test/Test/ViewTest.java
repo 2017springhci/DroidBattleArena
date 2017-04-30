@@ -92,5 +92,14 @@ public class ViewTest {
         frame.setPreferredSize(new Dimension(300, 300));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         a.runGame();
+        
+        try{
+            Thread.sleep(5000);
+        } catch(Exception e) {
+            // do nothing
+        }
+        
+        a.reset();
+        a.runGame();
    }
 }

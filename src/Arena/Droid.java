@@ -96,4 +96,8 @@ public class Droid {
     public Arena getArena() {
         return arena;
     }
+    
+    public Program getProgram() {
+        return prog;
+    }
 }

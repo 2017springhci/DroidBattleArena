@@ -18,6 +18,7 @@ public class Arena {
     private ArrayList<Integer[]> laserShots; //{startX, startY, endX, endY, droidIndex}
     private ArrayList<Integer[]> droidMoves; //{startX, startY, endX, endY, droidIndex}
     private ArrayList<Integer[]> droidDeaths; //{X, Y, droidIndex}
+    private ArrayList<Droid> initialParticipants; //The original locations of the droids, to make resetting the arena easy
     
     public Arena(int h, int w) {
         height = h;
@@ -28,7 +29,20 @@ public class Arena {
         droidMoves = new ArrayList<>();
         laserShots = new ArrayList<>();
         droidDeaths = new ArrayList<>();
+        initialParticipants = new ArrayList<Droid>();
         Condition.setArena(this);
+    }
+    
+    public void reset() {
+        participants = new ArrayList<>();
+        for(Droid d : initialParticipants) {
+            participants.add(new Droid(d.getPosX(), d.getPosY(), d.getProgram()));
+        }
+        droidMoves = new ArrayList<>();
+        laserShots = new ArrayList<>();
+        droidDeaths = new ArrayList<>();
+        System.out.println("Resetting arena...");
+        notifyLogListeners("Resetting arena...");
     }
 
     /**
@@ -61,8 +75,10 @@ public class Arena {
     }
     
     public void addParticipant(Droid d) {
-        participants.add(d);
         d.setArena(this);
+        participants.add(d);
+        //And save the initial position so that we can reset to it later
+        initialParticipants.add(new Droid(d.getPosX(), d.getPosY(), d.getProgram()));
         notifyListeners();
     }
     
