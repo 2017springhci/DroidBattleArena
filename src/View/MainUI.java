@@ -12,12 +12,14 @@ import Program.DragnDropFrame;
 import Program.Program;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import javax.swing.JDialog;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -32,6 +34,8 @@ public class MainUI extends JFrame {
     private final JMenuBar menu;
     private final JMenu file;
     private final JMenu play;
+    private final JMenu help;
+    private final JMenuItem instructions;
     private final JMenuItem battle;
     private final JMenuItem loadPlayerProgram;
     private final JMenuItem loadEnemyProgram;
@@ -93,6 +97,18 @@ public class MainUI extends JFrame {
         });
         play.add(battle);
         menu.add(play);
+        help = new JMenu("Help");
+        instructions = new JMenuItem("Instructions");
+        instructions.addActionListener(e -> {
+            JOptionPane.showMessageDialog(
+                    this, "First, create programs for both players using the File menu." +
+                    "\n Then, load your created programs into the blue (player) and "
+                    +"red (enemy) robots, also using the File menu." +
+                    "\n Finally, hit Battle under Play to begin the battle!" +
+                    "\n The log below the screen will tell you of what happened.");
+        });
+        help.add(instructions);
+        menu.add(help);
         content.add(menu,BorderLayout.PAGE_START);
         arenaViewer = new ArenaViewer(arena);
         arenaViewer.setPreferredSize(new Dimension(575, 315));
