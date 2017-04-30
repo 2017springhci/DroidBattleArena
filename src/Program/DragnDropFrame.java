@@ -46,6 +46,8 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerModel;
 import javax.swing.TransferHandler;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 
 public class DragnDropFrame extends JFrame {
@@ -56,12 +58,13 @@ public class DragnDropFrame extends JFrame {
     DefaultListModel model;
     SpinnerModel spinnerModel;
     String[] conditions = {"CAN_MOVE NORTH","CAN_MOVE SOUTH", "CAN_MOVE EAST","CAN_MOVE WEST","LESS_THAN","LESS_THAN_NUMERIC", "LESS_THAN_DOUBLE_NUMERIC", "GREATER_THAN", "GREATER_THAN_NUMERIC", "GREATER_THAN_DOUBLE_NUMERIC", "EQUAL_TO", "EQUAL_TO_NUMERIC", "EQUAL_TO_DOUBLE_NUMERIC", "CLOSER_THAN"};
-    String[] Cmds = {"MOVE NORTH", "MOVE SOUTH", "MOVE EAST", "MOVE WEST", "SHOOT", "STORE", "IF,COND,(,),{,}ENDIF,ELSE{,}", "WHILE,COND,(,),{,}ENDWHILE"};
+    String[] Cmds = {"MOVE_NORTH", "MOVE_SOUTH", "MOVE_EAST", "MOVE_WEST", "SHOOT", "STORE","ADD","SUBTRACT", "MULTIPLY","DIVIDE", "IF,COND,(,),{,}ENDIF,ELSE{,}", "WHILE,COND,(,),{,}ENDWHILE"};
     JButton done;
     JButton save;
     JButton clear;
     JSpinner firex;
     JSpinner firey;
+    JSpinner firez;
     JSpinner condArg1;
     JSpinner condArg2;
     Program p;
@@ -76,8 +79,9 @@ public class DragnDropFrame extends JFrame {
         setTitle("Drag and Drop Code");
 
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 15));
+       // JPanel panel = new JPanel(new HorizontalLayout());
       //panel to hold the value for shooting.....
-        JPanel firePanel = new JPanel(new GridLayout(2,2));
+        JPanel firePanel = new JPanel(new GridLayout(3,2));
         JPanel listPanel = new JPanel(new BorderLayout());
         fc = new JFileChooser();
      fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -87,12 +91,19 @@ public class DragnDropFrame extends JFrame {
        
         firex = new JSpinner();
         firey = new JSpinner();
-        
-        
-        firePanel.add(new JLabel("Shoot x value: "));
+        firez = new JSpinner();
+       firex.setVisible(false);
+       firey.setVisible(false);
+       firez.setVisible(false);
+        JLabel xval = new JLabel(" ");
+        JLabel yval = new JLabel(" ");
+        JLabel zval = new JLabel(" ");
+        firePanel.add(xval);
         firePanel.add(firex);
-        firePanel.add(new JLabel("Shoot y value: "));
+        firePanel.add(yval);
         firePanel.add(firey);
+        firePanel.add(zval);
+        firePanel.add(firez);
 
         condArg1 = new JSpinner();
         condArg2 = new JSpinner();
@@ -102,12 +113,57 @@ public class DragnDropFrame extends JFrame {
         JScrollPane pane = new JScrollPane();
         pane.setPreferredSize(new Dimension(300, 300));
 
+        
         commandList = new JList(Cmds);
         conditionList = new JList(conditions);
         model = new DefaultListModel();
         JList list = new JList(model);
         save = new JButton("Save");
         clear = new JButton("Clear");
+        
+        commandList.addListSelectionListener(new ListSelectionListener() {
+
+           @Override
+            public void valueChanged(ListSelectionEvent e) {
+                
+                if(commandList.getSelectedValue().equals("STORE")){
+                    xval.setText("Value: ");
+                    yval.setText("Location: ");
+                    zval.setText("");
+                    firex.setVisible(true);
+                    firey.setVisible(true);
+                    firez.setVisible(false);
+                    
+                
+                }
+               else if(commandList.getSelectedValue().equals("SHOOT")){
+                    xval.setText("Shoot x: ");
+                    yval.setText("Shoot y:");
+                    zval.setText("");
+                    firex.setVisible(true);
+                    firey.setVisible(true);
+                    firez.setVisible(false);
+                }
+               else if(commandList.getSelectedValue().equals("ADD") || commandList.getSelectedValue().equals("SUBTRACT") || commandList.getSelectedValue().equals("MULTIPLY") || commandList.getSelectedValue().equals("DIVIDE")){
+                  xval.setText("First Index: ");
+                  yval.setText("Second Index: ");
+                  zval.setText("Output Index: ");
+                  firex.setVisible(true);
+                  firey.setVisible(true);
+                  firez.setVisible(true);
+               }
+                else{
+                    xval.setText("");
+                    yval.setText("");
+                    zval.setText("");
+                    firex.setVisible(false);
+                    firey.setVisible(false);
+                    firez.setVisible(false);
+                }
+            }
+            
+        });
+        
         save.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -136,14 +192,20 @@ public class DragnDropFrame extends JFrame {
         JPanel buttonPanel = new JPanel(new FlowLayout());
         buttonPanel.add(save);
         buttonPanel.add(clear);
-        listPanel.add(buttonPanel, BorderLayout.SOUTH);
         
         done = new JButton("EXIT");
         done.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
                             //Program p = new Program();
-                            p.printProgram();
+                            try{
+                                p.printProgram();
+
+                            }
+                            catch(NullPointerException x){
+                            //do nothing
+                            }
+                                
                             System.exit(0);
                             
                         
@@ -151,10 +213,15 @@ public class DragnDropFrame extends JFrame {
                         
          });
         
+        buttonPanel.add(done);
+
+        listPanel.add(buttonPanel, BorderLayout.SOUTH);
 
         list.setDropMode(DropMode.INSERT);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.setTransferHandler(new ListHandler());
+        
+        
         
         list.addKeyListener(new KeyListener(){
 
@@ -202,7 +269,6 @@ public class DragnDropFrame extends JFrame {
         pane.getViewport().add(list); 
         listPanel.add(pane, BorderLayout.CENTER);
         panel.add(listPanel);
-        panel.add(done);
         
         add(panel);
 
@@ -241,56 +307,84 @@ public class DragnDropFrame extends JFrame {
                    i+=3;
                    while(!model.get(i).toString().startsWith("}")){
                        s= (String) model.get(i);
-                        switch(s) {
-                        case "MOVE NORTH":
-                            x.addCommand(new MoveCommand(NORTH));
-                            break;
-                        case "MOVE EAST":
-                            x.addCommand(new MoveCommand(EAST));
-                            break;
-                        case "MOVE WEST":
-                            x.addCommand(new MoveCommand(WEST));
-                            break;
-                        case "MOVE SOUTH":
-                            x.addCommand(new MoveCommand(SOUTH));
-                            break;
-                        default:
-                            String[] sArray = s.split(" ");
-                        if(sArray[0].equals("SHOOT")){
-                      p.addCommand(new ShootCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
-                  }
-                else{
-                      p.addCommand(new StoreCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
-                 }
-                        }
+                        String[] sArray = s.split(" ");
+
+            switch(sArray[0]) {
+            case "MOVE_NORTH":
+                x.addCommand(new MoveCommand(NORTH));
+                break;
+            case "MOVE_EAST":
+                x.addCommand(new MoveCommand(EAST));
+                break;
+            case "MOVE_WEST":
+                x.addCommand(new MoveCommand(WEST));
+                break;
+            case "MOVE_SOUTH":
+                x.addCommand(new MoveCommand(SOUTH));
+                break;
+            case "SHOOT":
+                 x.addCommand(new ShootCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
+                break;
+            case "STORE":
+                 x.addCommand(new StoreCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
+                 break;
+            case "ADD":
+                x.addCommand(new ArithmeticCommand(ArithmeticEnum.ADD, Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2]), Integer.parseInt(sArray[3])));
+                break;
+            case "SUBTRACT":
+                x.addCommand(new ArithmeticCommand(ArithmeticEnum.SUBTRACT, Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2]), Integer.parseInt(sArray[3])));
+                break;
+            case "MULTIPLY":
+                x.addCommand(new ArithmeticCommand(ArithmeticEnum.MULTIPLY, Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2]), Integer.parseInt(sArray[3])));
+                break;
+            case "DIVIDE":
+                x.addCommand(new ArithmeticCommand(ArithmeticEnum.DIVIDE, Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2]), Integer.parseInt(sArray[3])));
+                break;
+            default:
+                
+                    }
                        i++;
                    }
                    //to bypass else
                    i+=2;
                    while(!model.get(i).toString().startsWith("}")){
                        s= (String) model.get(i);
-                        switch(s) {
-                        case "MOVE NORTH":
-                            x.addElseCommand(new MoveCommand(NORTH));
-                            break;
-                        case "MOVE EAST":
-                            x.addElseCommand(new MoveCommand(EAST));
-                            break;
-                        case "MOVE WEST":
-                            x.addElseCommand(new MoveCommand(WEST));
-                            break;
-                        case "MOVE SOUTH":
-                            x.addElseCommand(new MoveCommand(SOUTH));
-                            break;
-                        default:
-                            String[] sArray = s.split(" ");
-                            if(sArray[0].equals("SHOOT")){
-                      p.addCommand(new ShootCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
-                  }
-                else{
-                      p.addCommand(new StoreCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
-                 }
-                             }
+                        String[] sArray = s.split(" ");
+
+            switch(sArray[0]) {
+            case "MOVE_NORTH":
+                x.addElseCommand(new MoveCommand(NORTH));
+                break;
+            case "MOVE_EAST":
+                x.addElseCommand(new MoveCommand(EAST));
+                break;
+            case "MOVE_WEST":
+                x.addElseCommand(new MoveCommand(WEST));
+                break;
+            case "MOVE_SOUTH":
+                x.addElseCommand(new MoveCommand(SOUTH));
+                break;
+            case "SHOOT":
+                x.addElseCommand(new ShootCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
+                break;
+            case "STORE":
+                x.addElseCommand(new StoreCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
+                 break;
+            case "ADD":
+                x.addElseCommand(new ArithmeticCommand(ArithmeticEnum.ADD, Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2]), Integer.parseInt(sArray[3])));
+                break;
+            case "SUBTRACT":
+                x.addElseCommand(new ArithmeticCommand(ArithmeticEnum.SUBTRACT, Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2]), Integer.parseInt(sArray[3])));
+                break;
+            case "MULTIPLY":
+                x.addElseCommand(new ArithmeticCommand(ArithmeticEnum.MULTIPLY, Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2]), Integer.parseInt(sArray[3])));
+                break;
+            case "DIVIDE":
+                x.addElseCommand(new ArithmeticCommand(ArithmeticEnum.DIVIDE, Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2]), Integer.parseInt(sArray[3])));
+                break;
+            default:
+                
+                    }
                        i++;
                    }
                    p.addCommand(x);
@@ -313,28 +407,42 @@ public class DragnDropFrame extends JFrame {
                    i+=3;
                    while(!model.get(i).toString().startsWith("}")){
                        s= (String) model.get(i);
-                        switch(s) {
-                        case "MOVE NORTH":
-                            x.addCommand(new MoveCommand(NORTH));
-                            break;
-                        case "MOVE EAST":
-                            x.addCommand(new MoveCommand(EAST));
-                            break;
-                        case "MOVE WEST":
-                            x.addCommand(new MoveCommand(WEST));
-                            break;
-                        case "MOVE SOUTH":
-                            x.addCommand(new MoveCommand(SOUTH));
-                            break;
-                        default:
-                            String[] sArray = s.split(" ");
-                            if(sArray[0].equals("SHOOT")){
-                      p.addCommand(new ShootCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
-                  }
-                else{
-                      p.addCommand(new StoreCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
-                 }
-                                }
+                        String[] sArray = s.split(" ");
+
+            switch(sArray[0]) {
+            case "MOVE_NORTH":
+                x.addCommand(new MoveCommand(NORTH));
+                break;
+            case "MOVE_EAST":
+                x.addCommand(new MoveCommand(EAST));
+                break;
+            case "MOVE_WEST":
+                x.addCommand(new MoveCommand(WEST));
+                break;
+            case "MOVE_SOUTH":
+                x.addCommand(new MoveCommand(SOUTH));
+                break;
+            case "SHOOT":
+                x.addCommand(new ShootCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
+                break;
+            case "STORE":
+                x.addCommand(new StoreCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
+                 break;
+            case "ADD":
+                x.addCommand(new ArithmeticCommand(ArithmeticEnum.ADD, Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2]), Integer.parseInt(sArray[3])));
+                break;
+            case "SUBTRACT":
+                x.addCommand(new ArithmeticCommand(ArithmeticEnum.SUBTRACT, Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2]), Integer.parseInt(sArray[3])));
+                break;
+            case "MULTIPLY":
+                x.addCommand(new ArithmeticCommand(ArithmeticEnum.MULTIPLY, Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2]), Integer.parseInt(sArray[3])));
+                break;
+            case "DIVIDE":
+                x.addCommand(new ArithmeticCommand(ArithmeticEnum.DIVIDE, Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2]), Integer.parseInt(sArray[3])));
+                break;
+            default:
+                
+                    }
                        i++;
                    }
                    
@@ -345,28 +453,41 @@ public class DragnDropFrame extends JFrame {
                
           }
           else{
-           
-            switch(s) {
-            case "MOVE NORTH":
+            String[] sArray = s.split(" ");
+
+            switch(sArray[0]) {
+            case "MOVE_NORTH":
                 p.addCommand(new MoveCommand(NORTH));
                 break;
-            case "MOVE EAST":
+            case "MOVE_EAST":
                 p.addCommand(new MoveCommand(EAST));
                 break;
-            case "MOVE WEST":
+            case "MOVE_WEST":
                 p.addCommand(new MoveCommand(WEST));
                 break;
-            case "MOVE SOUTH":
+            case "MOVE_SOUTH":
                 p.addCommand(new MoveCommand(SOUTH));
                 break;
+            case "SHOOT":
+                 p.addCommand(new ShootCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
+                break;
+            case "STORE":
+                 p.addCommand(new StoreCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
+                 break;
+            case "ADD":
+                p.addCommand(new ArithmeticCommand(ArithmeticEnum.ADD, Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2]), Integer.parseInt(sArray[3])));
+                break;
+            case "SUBTRACT":
+                p.addCommand(new ArithmeticCommand(ArithmeticEnum.SUBTRACT, Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2]), Integer.parseInt(sArray[3])));
+                break;
+            case "MULTIPLY":
+                p.addCommand(new ArithmeticCommand(ArithmeticEnum.MULTIPLY, Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2]), Integer.parseInt(sArray[3])));
+                break;
+            case "DIVIDE":
+                p.addCommand(new ArithmeticCommand(ArithmeticEnum.DIVIDE, Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2]), Integer.parseInt(sArray[3])));
+                break;
             default:
-                String[] sArray = s.split(" ");
-                if(sArray[0].equals("SHOOT")){
-                      p.addCommand(new ShootCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
-                  }
-                else{
-                      p.addCommand(new StoreCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
-                 }
+                
                     }
            }
            
@@ -404,6 +525,9 @@ public class DragnDropFrame extends JFrame {
                 }
                 if(line.startsWith("LESS_THAN") || line.startsWith("GREATER") || line.startsWith("EQUAL") || line.startsWith("CLOSER")){
                     line = condArg1.getValue() + " " + line + " " + condArg2.getValue();
+                }
+                if(line.equals("ADD") || line.equals("SUBTRACT") || line.equals("MULTIPLY") || line.equals("DIVIDE")){
+                    line = line + " " + firex.getValue() + " " + firey.getValue() + " " + firez.getValue();
                 }
              } catch (Exception e) {
                return false;
