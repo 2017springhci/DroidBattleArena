@@ -102,10 +102,10 @@ public class MainUI extends JFrame {
         instructions.addActionListener(e -> {
             JOptionPane.showMessageDialog(
                     this, "First, create programs for both players using the File menu." +
-                    "\n Then, load your created programs into the blue (player) and "
+                    "\nThen, load your created programs into the blue (player) and "
                     +"red (enemy) robots, also using the File menu." +
-                    "\n Finally, hit Battle under Play to begin the battle!" +
-                    "\n The log below the screen will tell you of what happened.");
+                    "\nFinally, hit Battle under Play to begin the battle!" +
+                    "\nThe log below the screen will tell you of what happened.");
         });
         help.add(instructions);
         menu.add(help);
