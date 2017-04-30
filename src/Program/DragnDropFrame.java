@@ -58,7 +58,7 @@ public class DragnDropFrame extends JFrame {
     DefaultListModel model;
     SpinnerModel spinnerModel;
     String[] conditions = {"CAN_MOVE NORTH","CAN_MOVE SOUTH", "CAN_MOVE EAST","CAN_MOVE WEST","LESS_THAN","LESS_THAN_NUMERIC", "LESS_THAN_DOUBLE_NUMERIC", "GREATER_THAN", "GREATER_THAN_NUMERIC", "GREATER_THAN_DOUBLE_NUMERIC", "EQUAL_TO", "EQUAL_TO_NUMERIC", "EQUAL_TO_DOUBLE_NUMERIC", "CLOSER_THAN"};
-    String[] Cmds = {"MOVE_NORTH", "MOVE_SOUTH", "MOVE_EAST", "MOVE_WEST", "SHOOT", "STORE","ADD","SUBTRACT", "MULTIPLY","DIVIDE", "IF,COND,(,),{,}ENDIF,ELSE{,}", "WHILE,COND,(,),{,}ENDWHILE"};
+    String[] Cmds = {"MOVE_NORTH", "MOVE_SOUTH", "MOVE_EAST", "MOVE_WEST", "SHOOT","SHOOT_FROM_MEM", "STORE","ADD","SUBTRACT", "MULTIPLY","DIVIDE", "IF,COND,(,),{,}ENDIF,ELSE{,}", "WHILE,COND,(,),{,}ENDWHILE"};
     JButton done;
     JButton save;
     JButton clear;
@@ -138,12 +138,21 @@ public class DragnDropFrame extends JFrame {
                 }
                else if(commandList.getSelectedValue().equals("SHOOT")){
                     xval.setText("Shoot x: ");
-                    yval.setText("Shoot y:");
+                    yval.setText("Shoot y: ");
                     zval.setText("");
                     firex.setVisible(true);
                     firey.setVisible(true);
                     firez.setVisible(false);
                 }
+               else if(commandList.getSelectedValue().equals("SHOOT_FROM_MEM")){
+                   xval.setText("Mem. location: ");
+                   yval.setText("");
+                   zval.setText("");
+                   firex.setVisible(true);
+                   firey.setVisible(false);
+                   firez.setVisible(false);
+               }
+               
                else if(commandList.getSelectedValue().equals("ADD") || commandList.getSelectedValue().equals("SUBTRACT") || commandList.getSelectedValue().equals("MULTIPLY") || commandList.getSelectedValue().equals("DIVIDE")){
                   xval.setText("First Index: ");
                   yval.setText("Second Index: ");
@@ -340,6 +349,9 @@ public class DragnDropFrame extends JFrame {
             case "DIVIDE":
                 x.addCommand(new ArithmeticCommand(ArithmeticEnum.DIVIDE, Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2]), Integer.parseInt(sArray[3])));
                 break;
+            case "SHOOT_FROM_MEM":
+                x.addCommand(new ShootCommand(Integer.parseInt(sArray[1]), p));
+                break;
             default:
                 
                     }
@@ -381,6 +393,9 @@ public class DragnDropFrame extends JFrame {
                 break;
             case "DIVIDE":
                 x.addElseCommand(new ArithmeticCommand(ArithmeticEnum.DIVIDE, Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2]), Integer.parseInt(sArray[3])));
+                break;
+            case "SHOOT_FROM_MEM":
+                x.addElseCommand(new ShootCommand(Integer.parseInt(sArray[1]), p));
                 break;
             default:
                 
@@ -440,6 +455,9 @@ public class DragnDropFrame extends JFrame {
             case "DIVIDE":
                 x.addCommand(new ArithmeticCommand(ArithmeticEnum.DIVIDE, Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2]), Integer.parseInt(sArray[3])));
                 break;
+            case "SHOOT_FROM_MEM":
+                x.addCommand(new ShootCommand(Integer.parseInt(sArray[1]), p));
+                break;
             default:
                 
                     }
@@ -486,6 +504,9 @@ public class DragnDropFrame extends JFrame {
             case "DIVIDE":
                 p.addCommand(new ArithmeticCommand(ArithmeticEnum.DIVIDE, Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2]), Integer.parseInt(sArray[3])));
                 break;
+            case "SHOOT_FROM_MEM":
+                p.addCommand(new ShootCommand(Integer.parseInt(sArray[1]), p));
+                break;
             default:
                 
                     }
@@ -525,6 +546,9 @@ public class DragnDropFrame extends JFrame {
                 }
                 if(line.startsWith("LESS_THAN") || line.startsWith("GREATER") || line.startsWith("EQUAL") || line.startsWith("CLOSER")){
                     line = condArg1.getValue() + " " + line + " " + condArg2.getValue();
+                }
+                if(line.equals("SHOOT_FROM_MEM")){
+                    line = line + " " + firex.getValue();
                 }
                 if(line.equals("ADD") || line.equals("SUBTRACT") || line.equals("MULTIPLY") || line.equals("DIVIDE")){
                     line = line + " " + firex.getValue() + " " + firey.getValue() + " " + firez.getValue();
