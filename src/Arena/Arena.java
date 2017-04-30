@@ -41,8 +41,8 @@ public class Arena {
         droidMoves = new ArrayList<>();
         laserShots = new ArrayList<>();
         droidDeaths = new ArrayList<>();
-        System.out.println("Resetting arena...");
-        notifyLogListeners("Resetting arena...");
+        System.out.println("Resetting arena...\n");
+        notifyLogListeners("Resetting arena...\n");
     }
 
     /**
