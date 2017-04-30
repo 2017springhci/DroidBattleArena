@@ -13,6 +13,7 @@ import javax.swing.JTextArea;
  * @author joseph
  */
 public class ArenaLogger extends JTextArea implements LogListener {
+    @Override
     public void logNotify(String s) {
         this.append(s);
     }
