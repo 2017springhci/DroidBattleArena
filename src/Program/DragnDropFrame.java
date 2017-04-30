@@ -56,7 +56,7 @@ public class DragnDropFrame extends JFrame {
     DefaultListModel model;
     SpinnerModel spinnerModel;
     String[] conditions = {"CAN_MOVE NORTH","CAN_MOVE SOUTH", "CAN_MOVE EAST","CAN_MOVE WEST","LESS_THAN","LESS_THAN_NUMERIC", "LESS_THAN_DOUBLE_NUMERIC", "GREATER_THAN", "GREATER_THAN_NUMERIC", "GREATER_THAN_DOUBLE_NUMERIC", "EQUAL_TO", "EQUAL_TO_NUMERIC", "EQUAL_TO_DOUBLE_NUMERIC", "CLOSER_THAN"};
-    String[] Cmds = {"MOVE NORTH", "MOVE SOUTH", "MOVE EAST", "MOVE WEST", "SHOOT", "IF,COND,(,),{,}ENDIF,ELSE{,}", "WHILE,COND,(,),{,}ENDWHILE"};
+    String[] Cmds = {"MOVE NORTH", "MOVE SOUTH", "MOVE EAST", "MOVE WEST", "SHOOT", "STORE", "IF,COND,(,),{,}ENDIF,ELSE{,}", "WHILE,COND,(,),{,}ENDWHILE"};
     JButton done;
     JButton save;
     JButton clear;
@@ -256,8 +256,13 @@ public class DragnDropFrame extends JFrame {
                             break;
                         default:
                             String[] sArray = s.split(" ");
-                            x.addCommand(new ShootCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
-                                }
+                        if(sArray[0].equals("SHOOT")){
+                      p.addCommand(new ShootCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
+                  }
+                else{
+                      p.addCommand(new StoreCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
+                 }
+                        }
                        i++;
                    }
                    //to bypass else
@@ -279,7 +284,12 @@ public class DragnDropFrame extends JFrame {
                             break;
                         default:
                             String[] sArray = s.split(" ");
-                            x.addElseCommand(new ShootCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
+                            if(sArray[0].equals("SHOOT")){
+                      p.addCommand(new ShootCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
+                  }
+                else{
+                      p.addCommand(new StoreCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
+                 }
                              }
                        i++;
                    }
@@ -318,7 +328,12 @@ public class DragnDropFrame extends JFrame {
                             break;
                         default:
                             String[] sArray = s.split(" ");
-                            x.addCommand(new ShootCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
+                            if(sArray[0].equals("SHOOT")){
+                      p.addCommand(new ShootCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
+                  }
+                else{
+                      p.addCommand(new StoreCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
+                 }
                                 }
                        i++;
                    }
@@ -346,7 +361,12 @@ public class DragnDropFrame extends JFrame {
                 break;
             default:
                 String[] sArray = s.split(" ");
-                p.addCommand(new ShootCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
+                if(sArray[0].equals("SHOOT")){
+                      p.addCommand(new ShootCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
+                  }
+                else{
+                      p.addCommand(new StoreCommand(Integer.parseInt(sArray[1]), Integer.parseInt(sArray[2])));
+                 }
                     }
            }
            
@@ -377,6 +397,9 @@ public class DragnDropFrame extends JFrame {
              try {
                 line = (String) transferable.getTransferData(DataFlavor.stringFlavor);
                 if(line.equals("SHOOT")){
+                    line = line + " " + firex.getValue() + " " + firey.getValue();
+                }
+                if(line.equals("STORE")){
                     line = line + " " + firex.getValue() + " " + firey.getValue();
                 }
                 if(line.startsWith("LESS_THAN") || line.startsWith("GREATER") || line.startsWith("EQUAL") || line.startsWith("CLOSER")){
