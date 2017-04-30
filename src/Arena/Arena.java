@@ -129,6 +129,17 @@ public class Arena {
             progressTime();
         } while (!gameOver());
         System.out.println("And it is over!");
+        String output = "-----------------------\nGAME OVER!\n";
+        //Output the result of the game
+        for(int i = 0; i < participants.size(); i++) {
+            if(participants.get(i).isAlive()) {
+                output += "Player " + i + " wins!\n";
+            }
+        }
+        if(!output.endsWith("wins!\n")) {
+            output += "Draw!";
+        }
+        notifyLogListeners(output);
     }
     
     public void progressTime() {
