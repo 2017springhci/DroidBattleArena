@@ -14,6 +14,8 @@ import static Program.MoveEnum.NORTH;
 import static Program.MoveEnum.SOUTH;
 import static Program.MoveEnum.WEST;
 import java.awt.BorderLayout;
+import static java.awt.BorderLayout.CENTER;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -25,6 +27,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import javax.swing.BoxLayout;
 
 import javax.swing.DefaultListModel;
 import javax.swing.DropMode;
@@ -40,12 +43,15 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerModel;
+import javax.swing.SwingConstants;
 import javax.swing.TransferHandler;
+import javax.swing.border.LineBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -86,6 +92,22 @@ public class DragnDropFrame extends JFrame {
         fc = new JFileChooser();
      fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
     
+        JMenuBar menuBar = new JMenuBar();
+        setJMenuBar(menuBar);
+
+        JMenu mnFile = new JMenu("File");
+        menuBar.add(mnFile);
+
+        JMenuItem mntmHelp = new JMenuItem("Help");
+	mntmHelp.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null, "This is your help, bitch!");
+            }
+            
+        });
+	mnFile.add(mntmHelp);
+        
                 
                 
        
@@ -108,7 +130,20 @@ public class DragnDropFrame extends JFrame {
         condArg1 = new JSpinner();
         condArg2 = new JSpinner();
         
+        JComponent editor1 = condArg1.getEditor();
+        JFormattedTextField tf1 = ((JSpinner.DefaultEditor) editor1).getTextField();
+        tf1.setColumns(2);
         
+        
+        JComponent editor2 = condArg2.getEditor();
+        JFormattedTextField tf2 = ((JSpinner.DefaultEditor) editor2).getTextField();
+        tf2.setColumns(2);
+        
+        condArg1.setVisible(false);
+        condArg2.setVisible(false);
+        JLabel condArg1Lab = new JLabel(" ");
+        JLabel condArg2Lab = new JLabel(" ");
+        JLabel summaryLabel = new JLabel(" ",SwingConstants.CENTER);
         
         JScrollPane pane = new JScrollPane();
         pane.setPreferredSize(new Dimension(300, 300));
@@ -120,6 +155,76 @@ public class DragnDropFrame extends JFrame {
         JList list = new JList(model);
         save = new JButton("Save");
         clear = new JButton("Clear");
+        
+        
+         conditionList.addListSelectionListener(new ListSelectionListener() {
+
+           @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if(conditionList.getSelectedValue().toString().startsWith("CAN_MOVE")){
+                    //set bot labels(need to make), and spinners to not visible
+                    condArg1Lab.setText(" ");
+                    condArg2Lab.setText(" ");
+                    condArg1.setVisible(false);
+                    condArg2.setVisible(false);
+                    summaryLabel.setText("CAN_MOVE");
+                    
+                }
+                if(conditionList.getSelectedValue().equals("LESS_THAN") || conditionList.getSelectedValue().equals("GREATER_THAN") || conditionList.getSelectedValue().equals("EQUAL_TO")){
+                    //set bot labels(need to make), and spinners to not visible
+                    condArg1Lab.setText("Value: ");
+                    condArg2Lab.setText("Value: ");
+                    condArg1.setVisible(true);
+                    condArg2.setVisible(true);
+                    if(conditionList.getSelectedValue().equals("LESS_THAN")){
+                        summaryLabel.setText(condArg1.getValue().toString() + " < " + condArg2.getValue().toString());
+                    }
+                    if(conditionList.getSelectedValue().equals("GREATER_THAN")){
+                        summaryLabel.setText(condArg1.getValue().toString() + " > " + condArg2.getValue().toString());
+                    }
+                    if(conditionList.getSelectedValue().equals("EQUAL_TO")){
+                        summaryLabel.setText(condArg1.getValue().toString() + " == " + condArg2.getValue().toString());
+                    }
+                    
+                }
+                if(conditionList.getSelectedValue().equals("LESS_THAN_NUMERIC") || conditionList.getSelectedValue().equals("GREATER_THAN_NUMERIC") || conditionList.getSelectedValue().equals("EQUAL_TO_NUMERIC")){
+                    
+                    condArg1Lab.setText("Location: ");
+                    condArg2Lab.setText("Value: ");
+                    condArg1.setVisible(true);
+                    condArg2.setVisible(true);
+                    if(conditionList.getSelectedValue().equals("LESS_THAN_NUMERIC")){
+                        summaryLabel.setText("MEM[" + condArg1.getValue().toString() + "] < " + condArg2.getValue().toString());
+                    }
+                    if(conditionList.getSelectedValue().equals("GREATER_THAN_NUMERIC")){
+                        summaryLabel.setText("MEM[" + condArg1.getValue().toString() + "] > " + condArg2.getValue().toString());
+                    }
+                    if(conditionList.getSelectedValue().equals("EQUAL_TO_NUMERIC")){
+                        summaryLabel.setText("MEM[" + condArg1.getValue().toString() + "] == " + condArg2.getValue().toString());
+                    }
+                    
+                }
+                if(conditionList.getSelectedValue().equals("LESS_THAN_DOUBLE_NUMERIC") || conditionList.getSelectedValue().equals("GREATER_THAN_DOUBLE_NUMERIC") || conditionList.getSelectedValue().equals("EQUAL_TO_DOUBLE_NUMERIC") || conditionList.getSelectedValue().equals("CLOSER_THAN")){
+                    
+                    condArg1Lab.setText("Location: ");
+                    condArg2Lab.setText("Location: ");
+                    condArg1.setVisible(true);
+                    condArg2.setVisible(true);
+                    if(conditionList.getSelectedValue().equals("LESS_THAN_DOUBLE_NUMERIC")){
+                        summaryLabel.setText("MEM[" + condArg1.getValue().toString() + "] < MEM[" + condArg2.getValue().toString()+ "]");
+                    }
+                    if(conditionList.getSelectedValue().equals("GREATER_THAN_DOUBLE_NUMERIC")){
+                        summaryLabel.setText("MEM[" + condArg1.getValue().toString() + "] > MEM[" + condArg2.getValue().toString()+ "]");
+                    }
+                    if(conditionList.getSelectedValue().equals("EQUAL_TO_DOUBLE_NUMERIC")){
+                        summaryLabel.setText("MEM[" + condArg1.getValue().toString() + "] == MEM[" + condArg2.getValue().toString()+ "]");
+                    }
+                    
+                }
+                
+            pack();
+            }
+        });
         
         commandList.addListSelectionListener(new ListSelectionListener() {
 
@@ -278,11 +383,35 @@ public class DragnDropFrame extends JFrame {
         conditionList.setDragEnabled(true);
 
 //        panel.add(field);
-        panel.add(commandList);
-        panel.add(firePanel);
-        panel.add(condArg1);
-        panel.add(conditionList);
-        panel.add(condArg2);
+        JPanel cmdpanel = new JPanel();
+        cmdpanel.add(commandList);
+        cmdpanel.add(firePanel);
+        cmdpanel.setBorder(new LineBorder(Color.BLACK));
+
+        panel.add(cmdpanel);
+        
+        
+        
+       
+        
+        
+        JPanel condpanel = new JPanel();
+      
+
+        condpanel.add(condArg1Lab);
+        condpanel.add(condArg1);
+
+        
+        condpanel.add(conditionList);
+       // condpanel.add(summaryLabel,BorderLayout.SOUTH);
+        
+       
+        condpanel.add(condArg2Lab);
+        condpanel.add(condArg2);
+       
+       
+       condpanel.setBorder(new LineBorder(Color.BLACK));
+         panel.add(condpanel);
         
         pane.getViewport().add(list); 
         listPanel.add(pane, BorderLayout.CENTER);
