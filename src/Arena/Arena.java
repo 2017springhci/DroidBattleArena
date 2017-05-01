@@ -43,6 +43,7 @@ public class Arena {
         droidDeaths = new ArrayList<>();
         System.out.println("Resetting arena...\n");
         notifyLogListeners("Resetting arena...\n");
+        notifyListeners();
     }
 
     /**

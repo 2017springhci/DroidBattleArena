@@ -124,7 +124,7 @@ public class MainUI extends JFrame {
         log.append("\n");
         log.setEditable(false);
         arena.addLogListener((LogListener) log);
-        log.setPreferredSize(new Dimension(625, 100));
+        log.setPreferredSize(new Dimension(625, 20));
         content.add(log, BorderLayout.SOUTH);
         this.add(content);
         this.pack();

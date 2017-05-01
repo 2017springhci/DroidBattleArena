@@ -329,7 +329,8 @@ public class DragnDropFrame extends JFrame {
                             //do nothing
                             }
                                 
-                            System.exit(0);
+                            //System.exit(0);
+                            setVisible(false);
                             
                         
                             }

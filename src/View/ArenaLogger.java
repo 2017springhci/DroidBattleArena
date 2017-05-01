@@ -15,6 +15,7 @@ import javax.swing.JTextArea;
 public class ArenaLogger extends JTextArea implements LogListener {
     @Override
     public void logNotify(String s) {
-        this.append(s);
+        /*this.append(s);
+        paintComponent(this.getGraphics());*/
     }
 }
