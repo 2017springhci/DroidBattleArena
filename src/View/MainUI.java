@@ -37,6 +37,7 @@ public class MainUI extends JFrame {
     private final JMenu help;
     private final JMenuItem instructions;
     private final JMenuItem battle;
+    private final JMenuItem reset;
     private final JMenuItem loadPlayerProgram;
     private final JMenuItem loadEnemyProgram;
     private final JMenuItem createProgram;
@@ -96,6 +97,11 @@ public class MainUI extends JFrame {
             
         });
         play.add(battle);
+        reset = new JMenuItem("Reset");
+        reset.addActionListener(e -> {
+            arena.reset();
+        });
+        play.add(reset);
         menu.add(play);
         help = new JMenu("Help");
         instructions = new JMenuItem("Instructions");
